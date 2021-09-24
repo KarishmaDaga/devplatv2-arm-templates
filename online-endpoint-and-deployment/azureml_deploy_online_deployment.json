@@ -16,6 +16,14 @@
       "defaultValue": "1",
       "type": "String"
     },
+    "modelReferenceType": {
+      "allowedValues": [
+        "DataPath",
+        "Id",
+        "OutputPath"
+      ],
+      "type": "String"
+    },
     "deploymentTags": {
       "defaultValue": {},
       "type": "Object"
@@ -55,20 +63,20 @@
       "type": "String"
     },
     "minimumInstanceCount": {
-      "defaultValue": "1",
-      "type": "String"
+      "defaultValue": 1,
+      "type": "Int"
     },
     "maximumInstanceCount": {
-      "defaultValue": "4",
-      "type": "String"
+      "defaultValue": 4,
+      "type": "Int"
     },
     "computeType": {
       "defaultValue": "Managed",
       "type": "String"
     },
     "appInsightsEnabled": {
-      "defaultValue": "true",
-      "type": "String"
+      "defaultValue": true,
+      "type": "Bool"
     },
     "instanceType": {
       "defaultValue": "Standard_F4s_v2",
@@ -77,34 +85,6 @@
     "scoringTimeoutSeconds": {
       "defaultValue": "PT60S",
       "type": "String"
-    },
-    "onlineEndpointIdentity": {
-      "defaultValue": {
-        "type": "SystemAssigned"
-      },
-      "type": "Object"
-    },
-    "onlineEndpointTags": {
-      "defaultValue": {},
-      "type": "Object"
-    },
-    "onlineEndpointProperties": {
-      "defaultValue": {
-        "traffic": {},
-        "authMode": "AMLToken",
-        "description": "test endpoint"
-      },
-      "type": "Object"
-    },
-    "onlineEndpointPropertiesTrafficUpdate": {
-      "defaultValue": {
-        "traffic": {
-          "blue": 100
-        },
-        "authMode": "AMLToken",
-        "description": "test endpoint"
-      },
-      "type": "Object"
     }
   },
   "variables": {
@@ -116,22 +96,10 @@
   },
   "resources": [
     {
-      "type": "Microsoft.MachineLearningServices/workspaces/onlineEndpoints",
-      "apiVersion": "2021-03-01-preview",
-      "name": "[concat(parameters('workspaceName'), '/', parameters('onlineEndpointName'))]",
-      "location": "[parameters('location')]",
-      "tags": "[parameters('onlineEndpointTags')]",
-      "identity": "[parameters('onlineEndpointIdentity')]",
-      "properties": "[parameters('onlineEndpointProperties')]"
-    },
-    {
       "type": "Microsoft.MachineLearningServices/workspaces/onlineEndpoints/deployments",
       "apiVersion": "2021-03-01-preview",
       "name": "[concat(parameters('workspaceName'), '/', parameters('onlineEndpointName'), '/', parameters('onlineDeploymentName'))]",
       "location": "[parameters('location')]",
-      "dependsOn": [
-        "[variables('endpointResourceId')]"
-      ],
       "tags": "[parameters('deploymentTags')]",
       "identity": {
         "type": "None"
@@ -139,7 +107,7 @@
       "properties": {
         "endpointComputeType": "Managed",
         "model": {
-          "referenceType": "Id",
+          "referenceType": "[parameters('modelReferenceType')]",
           "assetId": "[variables('modelVersionResourceId')]"
         },
         "scaleSettings": {
