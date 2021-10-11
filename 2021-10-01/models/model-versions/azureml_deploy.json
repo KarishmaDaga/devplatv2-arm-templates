@@ -1,0 +1,81 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspaceName": {
+      "type": "String",
+      "metadata": {
+        "description": "The name of the Azure Machine Learning Workspace."
+      }
+    },
+    "modelVersion": {
+      "defaultValue": "1",
+      "type": "String",
+      "metadata": {
+        "description": "The version of the Azure Machine Learning model which will be created or updated."
+      }
+    },
+    "modelContainerName": {
+      "type": "String",
+      "metadata": {
+        "description": "Specifies the name of the Azure Machine Learning model container which will contain this model."
+      }
+    },
+    "modelDescription": {
+      "defaultValue": "This is a test description for a model version created by an ARM template",
+      "type": "String"
+    },
+    "isAnonymous": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "If the name version are system generated (anonymous registration)."
+      }
+    },
+    "flavors": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "Mapping of model flavors to their properties."
+      }
+    },
+	"jobName": {
+		"type": "String",
+		"metadata": {
+        	"description": "Name of the Azure Machine Learning job."
+      	}
+	},
+	"modelFormat": {
+		"type": "String",
+		"allowedValues": [
+			"Custom"
+		]
+	},
+	"modelURI": {
+		"type": "String",
+		"metadata": {
+        	"description": "The storage URI location of the model asset in a Azure Machine Learning storage account."
+      	}
+	}
+  },
+  "variables": {
+    "workspaceResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces', parameters('workspaceName'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.MachineLearningServices/workspaces/models/versions",
+      "apiVersion": "2021-10-01",
+      "name": "[concat(parameters('workspaceName'), '/', parameters('modelContainerName'), '/', parameters('modelVersion'))]",
+      "properties": {
+        "description": "[parameters('modelDescription')]",
+        "flavors": "[parameters('flavors')]",
+        "isAnonymous": "[parameters('isAnonymous')]",
+		"jobName": "[parameters('jobName')]",
+		"modelFormat": "[parameters('modelFormat')]",
+		"modelUri": "[parameters('modelURI')]",
+        "properties": {},
+        "tags": {}
+      }
+    }
+  ]
+}
