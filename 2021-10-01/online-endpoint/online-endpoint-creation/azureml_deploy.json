@@ -1,1 +1,82 @@
-//
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workspaceName": {
+            "type": "String"
+        },
+        "location": {
+            "type": "String"
+        },
+        "identityType": {
+            "allowedValues": [
+                "SystemAssigned",
+                "UserAssigned",
+                "None"
+            ],
+            "type": "String"
+        },
+        "allowPublicAccess": {
+            "defaultValue": true,
+            "type": "Bool",
+            "metadata": {
+                "description": "Set to true for endpoints that should allow public access when Private Link is enabled."
+            }
+        },
+        "authMode": {
+            "allowedValues": [
+                "AMLToken",
+                "Key",
+                "AADToken"
+            ],
+            "type": "String"
+        },
+        "onlineEndpointName": {
+            "defaultValue": "testonlineendpointGA",
+            "type": "String"
+        },
+        "onlineEndpointDescription": {
+            "defaultValue": "This is an online endpoint created by an ARM template",
+            "type": "String"
+        },
+        "onlineEndpointTags": {
+            "defaultValue": {},
+            "type": "Object"
+        },
+        "provisioningState": {
+            "allowedValues": [
+                "Creating",
+                "Deleting",
+                "Succeeded",
+                "Failed",
+                "Updating",
+                "Canceled"
+            ],
+            "type": "String"
+        },
+        "traffic": {
+            "defaultValue": {},
+            "type": "Object"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.MachineLearningServices/workspaces/onlineEndpoints",
+            "apiVersion": "2021-10-01",
+            "name": "[concat(parameters('workspaceName'), '/', parameters('onlineEndpointName'))]",
+            "location": "[parameters('location')]",
+            "tags": "[parameters('onlineEndpointTags')]",
+            "identity": {
+                "type": "[parameters('identityType')]"
+            },
+            "properties": {
+                "allowPublicAccess": "[parameters('allowPublicAccess')]",
+                "authMode": "[parameters('authMode')]",
+                "description": "[parameters('onlineEndpointDescription')]",
+                "properties": {},
+                "provisioningState": "[parameters('provisioningState')]",
+                "traffic": "[parameters('traffic')]"
+            }
+        }
+    ]
+}
