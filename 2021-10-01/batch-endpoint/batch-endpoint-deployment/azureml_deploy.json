@@ -1,1 +1,200 @@
-
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspaceName": {
+      "type": "String"
+    },
+    "batchDeploymentName": {
+      "defaultValue": "testbatchdeploymentGA",
+      "type": "String"
+    },
+    "batchDeploymentDescription": {
+      "defaultValue": "This is a batch deployment created by an ARM template",
+      "type": "String"
+    },
+	"identityType": {
+		"allowedValues": [
+			"SystemAssigned",
+			"UserAssigned",
+			"None"
+		],
+		"type": "String"
+	},
+    "datastoreName": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "jobName": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "environmentName": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "environmentVersion": {
+      "defaultValue": "1",
+      "type": "String"
+    },
+    "codeAssetName": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "codeAssetVersion": {
+      "defaultValue": "1",
+      "type": "String"
+    },
+    "modelAssetName": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "modelAssetVersion": {
+      "defaultValue": "1",
+      "type": "String"
+    },
+    "batchEndpointName": {
+      "type": "String"
+    },
+    "location": {
+      "type": "String"
+    },
+    "scoringScript": {
+      "defaultValue": "score.py",
+      "type": "String"
+    },
+    "computeName": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "computeInstanceCount": {
+      "defaultValue": 0,
+      "type": "Int"
+    },
+	"computeInstanceType": {
+      "defaultValue": "",
+      "type": "String"
+    },
+	"maxConcurrencyPerInstance": {
+		"type": "int",
+		"defaultValue": 0,
+		"metadata": {
+			"description": "Indicates maximum number of parallelism per instance."
+		}
+	},
+    "errorThreshold": {
+      "type": "Int",
+      "metadata": {
+        "description": "If the error count for the entire input goes above this value, the batch inference will be aborted. Range is [-1, int.MaxValue]. For FileDataset, this value is the count of file failures. For TabularDataset, this value is the count of record failures. If set to -1 (the lower bound), all failures during batch inference will be ignored."
+      }
+    },
+    "loggingLevel": {
+      "allowedValues": [
+        "Info",
+        "Warning",
+        "Debug"
+      ],
+      "type": "String",
+      "metadata": {
+        "description": "Logging level for batch inference operation"
+      }
+    },
+    "miniBatchSize": {
+      "defaultValue": 1,
+      "type": "Int",
+      "metadata": {
+        "description": "Size of the mini-batch passed to each batch invocation. For FileDataset, this is the number of files per mini-batch. For TabularDataset, this is the size of the records in bytes, per mini-batch."
+      }
+    },
+    "modelPath": {
+      "defaultValue": "",
+      "type": "String",
+      "metadata": {
+        "description": "The path of the file/directory in the datastore."
+      }
+    },
+    "maxRetries": {
+      "defaultValue": 1,
+      "type": "Int",
+      "metadata": {
+        "description": "Maximum retry count for a mini-batch."
+      }
+    },
+	"outputAction": {
+		"type": "string",
+		"allowedValues": [
+			"SummaryOnly",
+        	"AppendRow"
+		],
+		"metadata": {
+			"description": "Enum to determine how batch inferencing will handle output"
+		}
+	},
+	"provisioningState": {
+		"allowedValues": [
+			"Creating",
+			"Deleting",
+			"Succeeded",
+			"Failed",
+			"Updating",
+			"Canceled"
+		],
+		"type": "String"
+	},
+    "timeout": {
+      "defaultValue": "PT1H",
+      "type": "String",
+      "metadata": {
+        "description": "Invocation timeout for a mini-batch, in ISO 8601 format."
+      }
+    }
+  },
+  "variables": {
+    "environmentResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentName'), parameters('environmentVersion'))]",
+    "codeVersionResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/codes/versions', parameters('workspaceName'), parameters('codeAssetName'), parameters('codeAssetVersion'))]",
+    "modelAssetResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/models/versions', parameters('workspaceName'), parameters('modelAssetName'), parameters('modelAssetVersion'))]",
+    "computeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('computeName'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.MachineLearningServices/workspaces/batchEndpoints/deployments",
+      "apiVersion": "2021-10-01",
+      "name": "[concat(parameters('workspaceName'), '/', parameters('batchEndpointName'), '/', parameters('batchDeploymentName'))]",
+      "location": "[parameters('location')]",
+      "tags": {},
+	  "identity": {
+		  "type": "[parameters('identityType')]"
+		},
+      "properties": {
+        "codeConfiguration": {
+          "codeId": "[variables('codeVersionResourceId')]",
+          "scoringScript": "[parameters('scoringScript')]"
+        },
+        "compute": "[variables('computeResourceId')]",
+        "description": "[parameters('batchDeploymentDescription')]",
+        "environmentId": "[variables('environmentResourceId')]",
+        "environmentVariables": {},
+        "errorThreshold": "[parameters('errorThreshold')]",
+        "loggingLevel": "[parameters('loggingLevel')]",
+		"maxConcurrencyPerInstance": "[parameters('maxConcurrencyPerInstance')]",
+        "miniBatchSize": "[parameters('miniBatchSize')]",
+        "model": {
+          "referenceType": "Id",
+          "assetId": "[variables('modelAssetResourceId')]"
+        },
+		"outputAction": "[parameters('outputAction')]",
+        "properties": {},
+		"provisioningState": "[parameters('provisioningState')]",
+		"resources": {
+			"instanceCount": "[parameters('computeInstanceCount')]",
+			"instanceType": "[parameters('computeInstanceType')]",
+			"properties": {}
+		},
+        "retrySettings": {
+          "maxRetries": "[parameters('maxRetries')]",
+          "timeout": "[parameters('timeout')]"
+        }
+      }
+    }
+  ]
+}
