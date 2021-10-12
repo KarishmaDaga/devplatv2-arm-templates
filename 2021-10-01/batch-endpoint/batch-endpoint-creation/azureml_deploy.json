@@ -1,1 +1,71 @@
-//
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workspaceName": {
+            "type": "String"
+        },
+        "batchEndpointName": {
+            "defaultValue": "testbatchendpointGA",
+            "type": "String"
+        },
+        "location": {
+            "type": "String"
+        },
+        "identityType": {
+            "allowedValues": [
+                "SystemAssigned",
+                "UserAssigned",
+                "None"
+            ],
+            "type": "String"
+        },
+        "authMode": {
+            "allowedValues": [
+                "Key",
+                "AADToken"
+            ],
+            "type": "String"
+        },
+        "batchEndpointDescription": {
+            "defaultValue": "A batch endpoint created by an ARM template",
+            "type": "String"
+        },
+        "provisioningState": {
+            "allowedValues": [
+                "Creating",
+                "Deleting",
+                "Succeeded",
+                "Failed",
+                "Updating",
+                "Canceled"
+            ],
+            "type": "String"
+        },
+        "traffic": {
+            "defaultValue": {},
+            "type": "Object"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.MachineLearningServices/workspaces/batchEndpoints",
+            "apiVersion": "2021-10-01",
+            "name": "[concat(parameters('workspaceName'), '/', parameters('batchEndpointName'))]",
+            "location": "[parameters('location')]",
+            "tags": {},
+            "identity": {
+                "type": "[parameters('identityType')]"
+            },
+            "properties": {
+                "authMode": "[parameters('authMode')]",
+                "defaults": {
+                    "deploymentName": "[parameters('batchEndpointName')]"
+                },
+                "description": "[parameters('batchEndpointDescription')]",
+                "properties": {},
+                "provisioningState": "[parameters('provisioningState')]"
+            }
+        }
+    ]
+}
