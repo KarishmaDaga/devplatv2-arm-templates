@@ -45,7 +45,8 @@
 	"environmentType": {
 		"type": "string",
 		"allowedValues": [
-			"Curated"
+			"Curated",
+			"UserCreated"
 		]
 	},
     "dockerImage": {
@@ -54,7 +55,14 @@
       "metadata": {
         "description": "Docker image path, for example: 'docker.io/tensorflow/serving:latest'."
       }
-    }
+    },
+	"operatingSystemType": {
+		"type": "string",
+		"allowedValues": [
+			"Linux",
+			"Windows"
+		]
+	}
   },
   "resources": [
     {
@@ -62,10 +70,10 @@
       "apiVersion": "2021-10-01",
       "name": "[concat(parameters('workspaceName'), '/', parameters('environmentAssetName'), '/', parameters('environmentAssetVersion'))]",
       "properties": {
-		"build": {
-			"contextUri": "[parameters('dockerContextURI')]",
-			"dockerfilePath": "[parameters('dockerfilePath')]"
-		},
+		// "build": {
+		// 	"contextUri": "[parameters('dockerContextURI')]",
+		// 	"dockerfilePath": "[parameters('dockerfilePath')]"
+		// },
 		"condaFile": "[parameters('condaFile')]",
 		"description": "[parameters('environmentDescription')]",
 		"environmentType": "[parameters('environmentType')]",
@@ -73,7 +81,8 @@
 		"inferenceConfig": {},
         "isAnonymous": "[parameters('isAnonymous')]",
         "properties": {},
-        "tags": {}
+        "tags": {},
+		"osType": "[parameters('operatingSystemType')]"
       }
     }
   ]
