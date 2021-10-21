@@ -9,7 +9,7 @@
             }
         },
         "codeAssetName": {
-            "defaultValue": "testCodeAssetName",
+            "defaultValue": "testCodeAssetGA",
             "type": "String",
             "metadata": {
                 "description": "Specifies the name of the Azure Machine Learning code asset which will be created or updated."
@@ -44,11 +44,11 @@
             "apiVersion": "2021-10-01",
             "name": "[concat(parameters('workspaceName'), '/', parameters('codeAssetName'), '/', parameters('codeAssetVersion'))]",
             "properties": {
-                "codeUri": "[parameters('codeUri')]",
                 "description": "[parameters('codeAssetDescription')]",
-                "isAnonymous": "[parameters('isAnonymous')]",
-                "properties": {},
-                "tags": {}
+				"properties": {},
+                "tags": {},
+                "codeUri": "[parameters('codeUri')]",
+                "isAnonymous": "[parameters('isAnonymous')]"
             }
         }
     ]
