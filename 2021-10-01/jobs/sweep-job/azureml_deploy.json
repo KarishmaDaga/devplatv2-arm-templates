@@ -140,31 +140,30 @@
 	// 		"description": "The percentage of runs to cancel at each evaluation interval."
     //   	}
 	// },
-	// Limits
-	// "maxTotalTrials": {
-	// 	"type": "int",
-	// 	"defaultValue": 1,
-	// 	"metadata": {
-	// 		"description": "Sweep Job max total trials."
-    //   	}
-	// },
-	// "maxConcurrentTrials": {
-	// 	"type": "int",
-	// 	"defaultValue": 1,
-	// 	"metadata": {
-	// 		"description": "Sweep Job max concurrent trials."
-    //   	}
-	// },
-	// "timeout": {
-	// 	"type": "string",
-	// 	"defaultValue": "PT10M",
-	// 	"metadata": {
-	// 		"description": "Timeout for each trial in seconds."
-    //   	}
-	// },
 	"inputData": {
 		"type": "object",
 		"defaultValue": {}
+	},
+	"maxTotalTrials": {
+		"type": "int",
+		"defaultValue": 1,
+		"metadata": {
+			"description": "Sweep Job max total trials."
+      	}
+	},
+	"maxConcurrentTrials": {
+		"type": "int",
+		"defaultValue": 1,
+		"metadata": {
+			"description": "Sweep Job max concurrent trials."
+      	}
+	},
+	"timeout": {
+		"type": "string",
+		"defaultValue": "PT10M",
+		"metadata": {
+			"description": "Timeout for each trial in seconds."
+      	}
 	},
 	"primaryMetric": {
 		"type": "String",
