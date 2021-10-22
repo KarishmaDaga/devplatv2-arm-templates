@@ -8,7 +8,7 @@
         "description": "Specifies the name of the Azure Machine Learning Workspace which will contain this job."
       }
     },
-    "jobName": {
+    "sweepJobName": {
       "defaultValue": "testSweepJobGA",
       "type": "String"
     },
@@ -23,6 +23,13 @@
         "description": "The command to execute on startup of the job. eg. 'python train.py'"
       }
     },
+	"environmentVariables": {
+		"type": "object",
+		"defaultValue": {},
+		"metadata": {
+			"description": "Environment variables included in the job."
+		}
+	},
     "codeAssetName": {
       "type": "String"
     },
@@ -44,8 +51,13 @@
       "defaultValue": "1",
       "type": "String"
     },
+	"displayName": {
+		"type": "string",
+		"defaultValue": "testSweepJobDisplayName"
+	},
     "experimentName": {
       "type": "String",
+	  "defaultValue": "testExperimentName",
       "metadata": {
         "description": "The name of the experiment the job belongs to. If not set, the job is placed in the 'Default' experiment."
       }
@@ -54,7 +66,8 @@
 		"type": "String",
 		"allowedValues": [
 			"AmlToken",
-			"ManagedIdentity"
+			"ManagedIdentity",
+			null
 		],
 		"defaultValue": "AmlToken"
 	},
@@ -64,11 +77,13 @@
 			"Grid",
 			"Random",
         	"Bayesian"
-		]
+		],
+		"metadata": {
+			"description": "Type of the hyperparameter sampling algorithms."
+		}
 	},
 	"searchSpace": {
 		"type": "Object",
-		"defaultValue": {},
 		"metadata": {
 		"description": "A dictionary containing each parameter and its distribution. The dictionary key is the name of the parameter. For example, some parameters include the learning rate, convolution size, and dropout rate."
       }
@@ -79,31 +94,108 @@
 			"Bandit",
         	"MedianStopping",
         	"TruncationSelection"
-		]
+		],
+		"metadata": {
+			"description": "Name of policy configuration. Early termination policies enable canceling poor-performing runs before they complete."
+      	}
 	},
-	"inputDatasetName": {
-		"type": "String",
-		"defaultValue": ""
+	"evaluationInterval": {
+		"type": "int",
+		"defaultValue": 0,
+		"metadata": {
+			"description": "Interval (number of runs) between policy evaluations."
+      	}
 	},
+	"delayEvaluation": {
+		"type": "int",
+		"defaultValue": 0,
+		"metadata": {
+			"description": "Number of intervals by which to delay the first evaluation."
+      	}
+	},
+	// Bandit Policy parameters:
+	// Defines an early termination policy based on slack criteria, and a frequency and
+	// delay interval for evaluation
+	// "slackFactor": {
+	// 	"type": "float",
+	// 	"defaultValue": "[float(0)]",
+	// 	"metadata": {
+	// 		"description": "Ratio of the allowed distance from the best performing run."
+    //   	}
+	// },
+	// "slackAmount": {
+	// 	"type": "float",
+	// 	"defaultValue": "[float(0)]",
+	// 	"metadata": {
+	// 		"description": "Absolute distance allowed from the best performing run."
+    //   	}
+	// },
+	// Truncation Selection Policy parameters:
+	// Defines an early termination policy that cancels a given percentage of runs
+	// at each evaluation interval.
+	// "truncationPercentage": {
+	// 	"type": "int",
+	// 	"defaultValue": 0,
+	// 	"metadata": {
+	// 		"description": "The percentage of runs to cancel at each evaluation interval."
+    //   	}
+	// },
+	// Limits
+	// "maxTotalTrials": {
+	// 	"type": "int",
+	// 	"defaultValue": 1,
+	// 	"metadata": {
+	// 		"description": "Sweep Job max total trials."
+    //   	}
+	// },
+	// "maxConcurrentTrials": {
+	// 	"type": "int",
+	// 	"defaultValue": 1,
+	// 	"metadata": {
+	// 		"description": "Sweep Job max concurrent trials."
+    //   	}
+	// },
+	// "timeout": {
+	// 	"type": "string",
+	// 	"defaultValue": "PT10M",
+	// 	"metadata": {
+	// 		"description": "Timeout for each trial in seconds."
+    //   	}
+	// },
 	"inputData": {
 		"type": "object",
-		"defaultValue": {
-			"trainingData": "[parameters('inputDatasetName')]"
-		}
+		"defaultValue": {}
+	},
+	"primaryMetric": {
+		"type": "String",
+		"metadata": {
+			"description": "Name of the metric to optimize."
+      	}
+	},
+	"goal": {
+		"type": "String",
+		"allowedValues": [
+			"Maximize",
+			"Minimize"
+		],
+		"metadata": {
+			"description": "Defines supported metric goals for hyperparameter tuning."
+      	}
 	},
   "variables": {
-    "codeVersionResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/codes/versions', parameters('workspaceName'), parameters('codeAssetName'), parameters('codeAssetVersion'))]",
-    "environmentResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentName'), parameters('environmentVersion'))]",
-    "computeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('computeName'))]"
+	"codeVersionResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/codes/versions', parameters('workspaceName'), parameters('codeAssetName'), parameters('codeAssetVersion'))]",
+	"environmentResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentName'), parameters('environmentVersion'))]",
+	"computeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('computeName'))]"
   },
   "resources": [
 		{
 		"type": "Microsoft.MachineLearningServices/workspaces/jobs",
 		"apiVersion": "2021-10-01",
-		"name": "[concat(parameters('workspaceName'), '/', parameters('jobName'))]",
+		"name": "[concat(parameters('workspaceName'), '/', parameters('sweepjobName'))]",
 		"properties": {
 			"jobType": "Sweep",
 			"description": "[parameters('sweepJobDescription')]",
+			"displayName": "[parameters('displayName')]",
 			"experimentName": "[parameters('experimentName')]",
 			"identity": "[parameters('identity')]",
 			"inputs": "[parameters('inputData')]",
@@ -113,6 +205,7 @@
 				"codeId": "[variables('codeVersionResourceId')]",
 				"command": "[parameters('command')]",
 				"environmentId": "[variables('environmentResourceId')]",
+				"environmentVariables": "[parameters('environmentVariables')]",
 				"computeId": "[variables('computeResourceId')]"
 			},
 			"earlyTermination": {
@@ -121,11 +214,14 @@
 				"delayEvaluation": "[parameters('delayEvaluation')]"
 			},
 			"limits": {
-				"maxTotalTrials": "[parameters('delayEvaluation')]",
-				"maxConcurrentTrials": "[parameters('delayEvaluation')]",
-				"timeout": "[parameters('delayEvaluation')]"
+				"maxTotalTrials": "[parameters('maxTotalTrials')]",
+				"maxConcurrentTrials": "[parameters('maxConcurrentTrials')]",
+				"timeout": "[parameters('timeout')]"
 			},
-			"status": "NotStarted",
+			"objective": {
+				"primaryMetric": "[parameters('primaryMetric')]",
+				"goal": "[parameters('goal')]"
+			},
 			"properties": {},
 			"tags": {}
 		}
