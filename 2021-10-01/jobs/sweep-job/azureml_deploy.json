@@ -180,7 +180,8 @@
 		"metadata": {
 			"description": "Defines supported metric goals for hyperparameter tuning."
       	}
-	},
+	}
+  },
   "variables": {
 	"codeVersionResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/codes/versions', parameters('workspaceName'), parameters('codeAssetName'), parameters('codeAssetVersion'))]",
 	"environmentResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentName'), parameters('environmentVersion'))]",
