@@ -5,9 +5,6 @@
         "workspaceName": {
             "type": "String"
         },
-        "location": {
-            "type": "String"
-        },
         "identityType": {
             "allowedValues": [
                 "SystemAssigned",
@@ -24,6 +21,7 @@
             }
         },
         "authMode": {
+            "defaultValue": "AMLToken",
             "allowedValues": [
                 "AMLToken",
                 "Key",
@@ -43,28 +41,30 @@
             "defaultValue": {},
             "type": "Object"
         },
-        "provisioningState": {
-            "allowedValues": [
-                "Creating",
-                "Deleting",
-                "Succeeded",
-                "Failed",
-                "Updating",
-                "Canceled"
-            ],
+        "computeName": {
+            "defaultValue": "",
             "type": "String"
         },
         "traffic": {
-            "defaultValue": {},
-            "type": "Object"
+            "defaultValue": {
+                "blue": 100
+            },
+            "type": "Object",
+            "metadata": {
+                "description": "Percentage of traffic from endpoint to divert to each deployment. Traffic values need to sum to 100."
+            }
         }
+    },
+    "variables": {
+        "location": "[resourceGroup().location]",
+        "computeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('computeName'))]"
     },
     "resources": [
         {
             "type": "Microsoft.MachineLearningServices/workspaces/onlineEndpoints",
             "apiVersion": "2021-10-01",
             "name": "[concat(parameters('workspaceName'), '/', parameters('onlineEndpointName'))]",
-            "location": "[parameters('location')]",
+            "location": "[variables('location')]",
             "tags": "[parameters('onlineEndpointTags')]",
             "identity": {
                 "type": "[parameters('identityType')]"
@@ -72,9 +72,9 @@
             "properties": {
                 "allowPublicAccess": "[parameters('allowPublicAccess')]",
                 "authMode": "[parameters('authMode')]",
+                "compute": "[variables('computeResourceId')]",
                 "description": "[parameters('onlineEndpointDescription')]",
                 "properties": {},
-                "provisioningState": "[parameters('provisioningState')]",
                 "traffic": "[parameters('traffic')]"
             }
         }
