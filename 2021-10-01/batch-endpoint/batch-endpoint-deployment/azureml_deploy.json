@@ -13,20 +13,7 @@
       "defaultValue": "This is a batch deployment created by an ARM template",
       "type": "String"
     },
-	"identityType": {
-		"allowedValues": [
-			"SystemAssigned",
-			"UserAssigned",
-			"None"
-		],
-		"type": "String"
-	},
-    "datastoreName": {
-      "defaultValue": "",
-      "type": "String"
-    },
-    "jobName": {
-      "defaultValue": "",
+	"batchEndpointName": {
       "type": "String"
     },
     "environmentName": {
@@ -37,6 +24,10 @@
       "defaultValue": "1",
       "type": "String"
     },
+	"environmentVariables": {
+		"type": "object",
+		"defaultValue": {}
+	},
     "codeAssetName": {
       "defaultValue": "",
       "type": "String"
@@ -53,14 +44,12 @@
       "defaultValue": "1",
       "type": "String"
     },
-    "batchEndpointName": {
-      "type": "String"
-    },
     "location": {
       "type": "String"
     },
     "scoringScript": {
       "defaultValue": "score.py",
+	  "minLength": 1,
       "type": "String"
     },
     "computeName": {
@@ -77,7 +66,7 @@
     },
 	"maxConcurrencyPerInstance": {
 		"type": "int",
-		"defaultValue": 0,
+		"defaultValue": 1,
 		"metadata": {
 			"description": "Indicates maximum number of parallelism per instance."
 		}
@@ -95,14 +84,15 @@
         "Warning",
         "Debug"
       ],
+	  "defaultValue": "Info",
       "type": "String",
       "metadata": {
         "description": "Logging level for batch inference operation"
       }
     },
     "miniBatchSize": {
-      "defaultValue": 1,
-      "type": "Int",
+      "defaultValue": "[long(10)]",
+      "type": "long",
       "metadata": {
         "description": "Size of the mini-batch passed to each batch invocation. For FileDataset, this is the number of files per mini-batch. For TabularDataset, this is the size of the records in bytes, per mini-batch."
       }
@@ -115,7 +105,7 @@
       }
     },
     "maxRetries": {
-      "defaultValue": 1,
+      "defaultValue": 3,
       "type": "Int",
       "metadata": {
         "description": "Maximum retry count for a mini-batch."
@@ -127,28 +117,30 @@
 			"SummaryOnly",
         	"AppendRow"
 		],
+		"defaultValue": "AppendRow",
 		"metadata": {
 			"description": "Enum to determine how batch inferencing will handle output"
 		}
 	},
-	"provisioningState": {
-		"allowedValues": [
-			"Creating",
-			"Deleting",
-			"Succeeded",
-			"Failed",
-			"Updating",
-			"Canceled"
-		],
-		"type": "String"
+	"outputFilename": {
+		"type": "string",
+		"defaultValue": "predictions.csv"
 	},
     "timeout": {
-      "defaultValue": "PT1H",
+      "defaultValue": "PT30S",
       "type": "String",
       "metadata": {
         "description": "Invocation timeout for a mini-batch, in ISO 8601 format."
       }
-    }
+    },
+	"properties": {
+		"type": "object",
+		"defaultValue": {}
+	},
+	"tags": {
+		"type": "object",
+		"defaultValue": {}
+	}
   },
   "variables": {
     "environmentResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentName'), parameters('environmentVersion'))]",
@@ -162,10 +154,7 @@
       "apiVersion": "2021-10-01",
       "name": "[concat(parameters('workspaceName'), '/', parameters('batchEndpointName'), '/', parameters('batchDeploymentName'))]",
       "location": "[parameters('location')]",
-      "tags": {},
-	  "identity": {
-		  "type": "[parameters('identityType')]"
-		},
+      "tags": "[parameters('tags')]",
       "properties": {
         "codeConfiguration": {
           "codeId": "[variables('codeVersionResourceId')]",
@@ -174,7 +163,7 @@
         "compute": "[variables('computeResourceId')]",
         "description": "[parameters('batchDeploymentDescription')]",
         "environmentId": "[variables('environmentResourceId')]",
-        "environmentVariables": {},
+        "environmentVariables": "[variables('environmentVariables')]",
         "errorThreshold": "[parameters('errorThreshold')]",
         "loggingLevel": "[parameters('loggingLevel')]",
 		"maxConcurrencyPerInstance": "[parameters('maxConcurrencyPerInstance')]",
@@ -184,8 +173,8 @@
           "assetId": "[variables('modelAssetResourceId')]"
         },
 		"outputAction": "[parameters('outputAction')]",
-        "properties": {},
-		"provisioningState": "[parameters('provisioningState')]",
+		"outputFilename": "[parameters('outputFilename')]",
+        "properties": "[parameters('properties')]",
 		"resources": {
 			"instanceCount": "[parameters('computeInstanceCount')]",
 			"instanceType": "[parameters('computeInstanceType')]",
