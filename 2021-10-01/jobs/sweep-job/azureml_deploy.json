@@ -16,6 +16,26 @@
       "defaultValue": "A sweep job created by an ARM template",
       "type": "String"
     },
+	"displayName": {
+      "type": "string",
+      "defaultValue": "testSweepJobDisplayName"
+    },
+    "experimentName": {
+      "type": "String",
+      "defaultValue": "testExperimentName",
+      "metadata": {
+        "description": "The name of the experiment the job belongs to. If not set, the job is placed in the 'Default' experiment."
+      }
+    },
+    "identity": {
+      "type": "String",
+      "allowedValues": [
+        "AmlToken",
+        "ManagedIdentity",
+        null
+      ],
+      "defaultValue": "AmlToken"
+    },
     "command": {
       "defaultValue": "python train.py",
       "type": "String",
@@ -51,26 +71,27 @@
         "description": "Environment variables included in the job."
       }
     },
-    "displayName": {
-      "type": "string",
-      "defaultValue": "testSweepJobDisplayName"
-    },
-    "experimentName": {
-      "type": "String",
-      "defaultValue": "testExperimentName",
-      "metadata": {
-        "description": "The name of the experiment the job belongs to. If not set, the job is placed in the 'Default' experiment."
-      }
-    },
-    "identity": {
-      "type": "String",
-      "allowedValues": [
-        "AmlToken",
-        "ManagedIdentity",
-        null
-      ],
-      "defaultValue": "AmlToken"
-    },
+	"processCountPerInstance": {
+		"type": "int",
+		"defaultValue": 1,
+		"metadata": {
+			"description": "Number of processes per node."
+		}
+	},
+	"workerCount": {
+		"type": "int",
+		"defaultValue": 1,
+		"metadata": {
+			"description": "Number of workers. If not specified, will default to the instance count."
+		}
+	},
+	"parameterServerCount": {
+		"type": "int",
+		"defaultValue": 0,
+		"metadata": {
+			"description": "Number of parameter server tasks."
+		}
+	},
     "samplingAlgorithm": {
       "type": "string",
       "allowedValues": [
@@ -286,45 +307,19 @@
       }
     },
     "distributionType": {
-      "Mpi": {
-        "type": "Object",
-        "defaultValue": {
-          "distributionType": "Mpi",
-          "processCountPerInstance": {
-            "type": "int",
-            "defaultValue": 1,
-            "metadata": {
-              "description": "Number of processes per node."
-            }
-          }
-        }
-      },
+		"Mpi": {
+			"distributionType": "Mpi",
+			"processCountPerInstance": "[parameters('processCountPerInstance')]"
+		},
       "Tensorflow": {
-        "type": "Object",
-        "defaultValue": {
-          "distributionType": "Tensorflow",
-          "workerCount": {
-            "type": "int",
-            "defaultValue": 1,
-            "metadata": {
-              "description": "Number of workers. If not specified, will default to the instance count."
-            }
-          }
-        }
+		"distributionType": "Tensorflow",
+		"workerCount": "[parameters('workerCount')]",
+		"parameterServerCount": "[parameters('parameterServerCount')]"
       },
       "PyTorch": {
-        "type": "Object",
-        "defaultValue": {
-          "distributionType": "Pytorch",
-          "processCountPerInstance": {
-            "type": "int",
-            "defaultValue": 1,
-            "metadata": {
-              "description": "Number of processes per node."
-            }
-          }
-        }
-      },
+		  "distributionType": "Mpi",
+		  "processCountPerInstance": "[parameters('processCountPerInstance')]"
+		},
       "null": null
     }
   },
