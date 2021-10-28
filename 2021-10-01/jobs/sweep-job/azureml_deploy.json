@@ -16,7 +16,7 @@
       "defaultValue": "A sweep job created by an ARM template",
       "type": "String"
     },
-	"displayName": {
+    "displayName": {
       "type": "string",
       "defaultValue": "testSweepJobDisplayName"
     },
@@ -71,27 +71,27 @@
         "description": "Environment variables included in the job."
       }
     },
-	"processCountPerInstance": {
-		"type": "int",
-		"defaultValue": 1,
-		"metadata": {
-			"description": "Number of processes per node."
-		}
-	},
-	"workerCount": {
-		"type": "int",
-		"defaultValue": 1,
-		"metadata": {
-			"description": "Number of workers. If not specified, will default to the instance count."
-		}
-	},
-	"parameterServerCount": {
-		"type": "int",
-		"defaultValue": 0,
-		"metadata": {
-			"description": "Number of parameter server tasks."
-		}
-	},
+    "processCountPerInstance": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "Number of processes per node."
+      }
+    },
+    "workerCount": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "Number of workers. If not specified, will default to the instance count."
+      }
+    },
+    "parameterServerCount": {
+      "type": "int",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Number of parameter server tasks."
+      }
+    },
     "samplingAlgorithm": {
       "type": "string",
       "allowedValues": [
@@ -307,19 +307,19 @@
       }
     },
     "distributionType": {
-		"Mpi": {
-			"distributionType": "Mpi",
-			"processCountPerInstance": "[parameters('processCountPerInstance')]"
-		},
+      "Mpi": {
+        "distributionType": "Mpi",
+        "processCountPerInstance": "[parameters('processCountPerInstance')]"
+      },
       "Tensorflow": {
-		"distributionType": "Tensorflow",
-		"workerCount": "[parameters('workerCount')]",
-		"parameterServerCount": "[parameters('parameterServerCount')]"
+        "distributionType": "Tensorflow",
+        "workerCount": "[parameters('workerCount')]",
+        "parameterServerCount": "[parameters('parameterServerCount')]"
       },
       "PyTorch": {
-		  "distributionType": "Mpi",
-		  "processCountPerInstance": "[parameters('processCountPerInstance')]"
-		},
+        "distributionType": "Mpi",
+        "processCountPerInstance": "[parameters('processCountPerInstance')]"
+      },
       "null": null
     }
   },
