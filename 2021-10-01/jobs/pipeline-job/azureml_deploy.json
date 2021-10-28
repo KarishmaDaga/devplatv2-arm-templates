@@ -84,7 +84,7 @@
     },
     "componentJob1Overrides": {
       "type": "object",
-      "default": null,
+      "default": {},
       "metadata": {
         "description": "Override component default settings"
       }
@@ -133,7 +133,7 @@
     },
     "componentJob2Overrides": {
       "type": "object",
-      "default": null,
+      "default": {},
       "metadata": {
         "description": "Override component default settings"
       }
@@ -171,21 +171,21 @@
         "description": "Data output set for jobs."
       }
     },
-    "bindingForComponent1": {
-      "type": "object",
-      "defaultValue": {
-        "bindingType": "Basic",
-        "source": "",
-        "destination": ""
-      }
+    "bindingSourceForComponent1": {
+      "type": "string",
+      "defaultValue": ""
     },
-    "bindingForComponent2": {
-      "type": "object",
-      "defaultValue": {
-        "bindingType": "Basic",
-        "source": "",
-        "destination": ""
-      }
+    "bindingDestinationForComponent1": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "bindingSourceForComponent2": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "bindingDestinationForComponent2": {
+      "type": "string",
+      "defaultValue": ""
     }
   },
   "variables": {
@@ -194,10 +194,22 @@
     "componentJob2ComputeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('componentJob2ComputeName'))]",
     "datasetAssetResourceId2": "[resourceId('Microsoft.MachineLearningServices/workspaces/datasets', parameters('datasetAssetName'), parameters('datasetAssetVersion'))]",
     "pipelineComputeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('pipelineComputeName'))]",
-    "pipelineBindings": [
-      "[parameters('bindingForComponent1')]",
-      "[parameters('bindingForComponent2')]"
-    ]
+    "bindingForComponent1": {
+      "type": "object",
+      "defaultValue": {
+        "bindingType": "Basic",
+        "source": "[parameters('bindingSourceForComponent1')]",
+        "destination": "[parameters('bindingDestinationForComponent1')]"
+      }
+    },
+    "bindingForComponent2": {
+      "type": "object",
+      "defaultValue": {
+        "bindingType": "Basic",
+        "source": "[parameters('bindingSourceForComponent2')]",
+        "destination": "[parameters('bindingDestinationForComponent2')]"
+      }
+    }
   },
   "resources": [
     {
@@ -232,7 +244,10 @@
         },
         "inputs": "[parameters('pipelineSampleInputs')",
         "outputs": "[parameters('pipelineSampleOutputs')",
-        "bindings": "[variables('pipelineBindings')",
+        "bindings": [
+          "[variables('bindingForComponent1')]",
+          "[variables('bindingForComponent2')]"
+        ],
         "properties": {},
         "tags": {}
       }
