@@ -1,212 +1,241 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "workspaceName": {
-            "type": "String",
-            "metadata": {
-                "description": "Specifies the name of the Azure Machine Learning Workspace which will contain this job."
-            }
-        },
-        "jobName": {
-            "defaultValue": "testCommandJob",
-            "type": "String"
-        },
-        "experimentName": {
-            "defaultValue": "Default",
-            "type": "String",
-            "metadata": {
-                "description": "The name of the experiment the job belongs to. If not set, the job is placed in the 'Default' experiment."
-            }
-        },
-        "displayName": {
-            "type": "String",
-            "metadata": {
-                "description": "The display name the job belongs to."
-            }
-        },
-        "pipelineJobDescription": {
-            "defaultValue": "A command job created by an ARM template",
-            "type": "String"
-        },
-		"continueRunOnStepFailure": {
-			"type": "bool",
-			"defaultValue": false
-		},
-		"defaultDatastoreName": {
-			"type": "string",
-			"defaultValue": "workspaceblobstore"
-		},
-		// component job 1
-		"componentJob1ComponentId": {
-			"type": "string",
-			"metadata": {
-				"description": ""
-			}
-		},
-        "componentJob1ComputeName": {
-            "type": "String"
-        },
-        "componentJob1DatasetAssetName": {
-            "defaultValue": "",
-            "type": "String"
-        },
-        "componentJob1DatasetAssetVersion": {
-            "defaultValue": "1",
-            "type": "String"
-        },
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspaceName": {
+      "type": "String",
+      "metadata": {
+        "description": "Specifies the name of the Azure Machine Learning Workspace which will contain this job."
+      }
+    },
+    "jobName": {
+      "defaultValue": "testPipelineJob",
+      "type": "String"
+    },
+    "experimentName": {
+      "defaultValue": "Default",
+      "type": "String",
+      "metadata": {
+        "description": "The name of the experiment the job belongs to. If not set, the job is placed in the 'Default' experiment."
+      }
+    },
+    "displayName": {
+      "type": "String",
+      "metadata": {
+        "description": "The display name the job belongs to."
+      }
+    },
+    "pipelineJobDescription": {
+      "defaultValue": "A command job created by an ARM template",
+      "type": "String"
+    },
+    "continueRunOnStepFailure": {
+      "type": "bool",
+      "defaultValue": false
+    },
+    "defaultDatastoreName": {
+      "type": "string",
+      "defaultValue": "workspaceblobstore"
+    },
+    "pipelineComputeName": {
+      "type": "string"
+    },
+    "componentJob1ComponentId": {
+      "type": "string",
+      "metadata": {
+        "description": "Reference to component artifact, e.g: "
+      }
+    },
+    "componentJob1ComputeName": {
+      "type": "String"
+    },
+    "componentJob1DatasetAssetName": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "componentJob1DatasetAssetVersion": {
+      "defaultValue": "1",
+      "type": "String"
+    },
+    "componentJob1Inputs": {
+      "defaultValue": {
         "componentJob1Inputs": {
-            "defaultValue": {
-                "datasetBinding": {
-                    "jobInputType": "Dataset",
-                    "datasetId": "[variables('datasetAssetResourceId1')]",
-                    "mode": "ReadOnlyMount"
-                }
-            },
-            "type": "Object",
-            "metadata": {
-                "description": "Mapping of input data bindings used in the job. The default is an example job input object."
-            }
-        },
-        "componentJob1Outputs": {
-            "defaultValue": {
-                "datasetOutput": {
-                    "jobOutputType": "Dataset",
-                    "mode": "ReadWriteMount"
-                }
-            },
-            "type": "Object",
-            "metadata": {
-                "description": "Mapping of output data bindings used in the job. The default is an example job output object."
-            }
-        },
-		"componentJob1Overrides": {
-			"type": "object",
-			"default": null
-		},
-		// component job 2
-		"componentJob2ComponentId": {
-			"type": "string",
-			"metadata": {
-				"description": ""
-			}
-		},
-        "componentJob2ComputeName": {
-            "type": "String"
-        },
-		"componentJob2DatasetAssetName": {
-            "defaultValue": "",
-            "type": "String"
-        },
-        "componentJob2DatasetAssetVersion": {
-            "defaultValue": "1",
-            "type": "String"
-        },
-        "componentJob2Inputs": {
-            "defaultValue": {
-                "datasetBinding": {
-                    "jobInputType": "Dataset",
-                    "datasetId": "[variables('datasetAssetResourceId2')]",
-                    "mode": "ReadOnlyMount"
-                }
-            },
-            "type": "Object",
-            "metadata": {
-                "description": "Mapping of input data bindings used in the job. The default is an example job input object."
-            }
-        },
-        "componentJob2Outputs": {
-            "defaultValue": {
-                "datasetOutput": {
-                    "jobOutputType": "Dataset",
-                    "mode": "ReadWriteMount"
-                }
-            },
-            "type": "Object",
-            "metadata": {
-                "description": "Mapping of output data bindings used in the job. The default is an example job output object."
-            }
-        },
-		"componentJob2Overrides": {
-			"type": "object",
-			"default": null
-		},
-		"pipelineInputs": {
-			"metadata": {
-				"description": ""
-			}
-		},
-		"pipelineOutputs": {
-			"metadata": {
-				"description": ""
-			}
-		},
-		"bindingForComponent1": {
-			"type": "object",
-			"defaultValue": {
-				"bindingType": "Basic",
-				"source": "",
-				"destination": ""
-			}
-		},
-		"bindingForComponent2": {
-			"type": "object",
-			"defaultValue": {
-				"bindingType": "Basic",
-				"source": "",
-				"destination": ""
-			}
-		}
-    },
-    "variables": {
-        "codeVersionResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/codes/versions', parameters('workspaceName'), parameters('codeAssetName'), parameters('codeAssetVersion'))]",
-        "environmentResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentName'), parameters('environmentVersion'))]",
-        "computeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('computeName'))]",
-        "datasetAssetResourceId1": "[resourceId('Microsoft.MachineLearningServices/workspaces/datasets', parameters('datasetAssetName'), parameters('datasetAssetVersion'))]",
-        "datasetAssetResourceId2": "[resourceId('Microsoft.MachineLearningServices/workspaces/datasets', parameters('datasetAssetName'), parameters('datasetAssetVersion'))]",
-		"pipelineBindings": {
-			"componentJob1Binding": "[parameters('bindingForComponent1')]",
-			"componentJob2Binding": "[parameters('bindingForComponent2')]"
-		}
-    },
-    "resources": [
-        {
-            "type": "Microsoft.MachineLearningServices/workspaces/jobs",
-            "apiVersion": "2021-10-01",
-            "name": "[concat(parameters('workspaceName'), '/', parameters('jobName'))]",
-            "properties": {
-                "jobType": "Pipeline",
-				"computeId": "[variables('computeResourceId')]",
-                "displayName": "[parameters('jobName')]",
-                "experimentName": "[parameters('experimentName')]",
-                "description": "[parameters('pipelineJobDescription')]",
-				"settings": {
-					"continueRunOnStepFailure": "[parameters('continueRunOnStepFailure')",
-					"defaultDatastoreName": "[parameters('defaultDatastoreName')"
-				},
-				"componentJobs": {
-					"componentJob1": {
-						"computeId": "[variables('computeResourceId')]",
-						"componentId": "[parameters('componentId')",
-						"inputs": "[parameters('inputs')",
-                		"outputs": "[parameters('outputs')",
-						"overrides": "[parameters('overrides')"
-					},
-					"componentJob2": {
-						"computeId": "[variables('computeResourceId')]",
-						"componentId": "[parameters('componentId')",
-						"inputs": "[parameters('inputs')",
-                		"outputs": "[parameters('outputs')",
-						"overrides": "[parameters('overrides')"
-					}
-				},
-				"inputs": "[parameters('pipelineInputs')",
-				"outputs": "[parameters('pipelineOutputs')",
-				"bindings": "[variables('pipelineBindings')",
-				"interactionEndpoints": "[parameters('interactionEndpoints')",
-                "properties": {},
-                "tags": {}
-            }
+          "jobInputType": "Dataset",
+          "datasetId": "[variables('datasetAssetResourceId1')]",
+          "mode": "ReadOnlyMount"
         }
+      },
+      "type": "Object",
+      "metadata": {
+        "description": "Mapping of input data bindings used in the job."
+      }
+    },
+    "componentJob1Outputs": {
+      "defaultValue": {
+        "componentJob1Outputs": {
+          "jobOutputType": "Dataset",
+          "mode": "ReadWriteMount"
+        }
+      },
+      "type": "Object",
+      "metadata": {
+        "description": "Mapping of output data bindings used in the job."
+      }
+    },
+    "componentJob1Overrides": {
+      "type": "object",
+      "default": null,
+      "metadata": {
+        "description": "Override component default settings"
+      }
+    },
+    "componentJob2ComponentId": {
+      "type": "string",
+      "metadata": {
+        "description": "Reference to component artifact."
+      }
+    },
+    "componentJob2ComputeName": {
+      "type": "String"
+    },
+    "componentJob2DatasetAssetName": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "componentJob2DatasetAssetVersion": {
+      "defaultValue": "1",
+      "type": "String"
+    },
+    "componentJob2Inputs": {
+      "defaultValue": {
+        "componentJob2Inputs": {
+          "jobInputType": "Dataset",
+          "datasetId": "[variables('datasetAssetResourceId2')]",
+          "mode": "ReadOnlyMount"
+        }
+      },
+      "type": "Object",
+      "metadata": {
+        "description": "Mapping of input data bindings used in the job."
+      }
+    },
+    "componentJob2Outputs": {
+      "defaultValue": {
+        "componentJob2Outputs": {
+          "jobOutputType": "Dataset",
+          "mode": "ReadWriteMount"
+        }
+      },
+      "type": "Object",
+      "metadata": {
+        "description": "Mapping of output data bindings used in the job."
+      }
+    },
+    "componentJob2Overrides": {
+      "type": "object",
+      "default": null,
+      "metadata": {
+        "description": "Override component default settings"
+      }
+    },
+    "pipelineSampleInputsDatasetAssetName": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "pipelineSampleInputsDatasetAssetVersion": {
+      "type": "string",
+      "defaultValue": "1"
+    },
+    "pipelineSampleInputs": {
+      "type": "object",
+      "defaultValue": {
+        "pipelineSampleInputData": {
+          "jobInputType": "Dataset",
+          "datasetId": "[resourceId('Microsoft.MachineLearningServices/workspaces/datasets', parameters('pipelineSampleInputsDatasetAssetName'), parameters('pipelineSampleInputsDatasetAssetVersion'))]",
+          "mode": "ReadOnlyMount"
+        }
+      },
+      "metadata": {
+        "description": "Data input set for jobs."
+      }
+    },
+    "pipelineSampleOutputs": {
+      "type": "object",
+      "defaultValue": {
+        "pipelineSampleOutputData": {
+          "jobOutputType": "Dataset",
+          "mode": "ReadWriteMount"
+        }
+      },
+      "metadata": {
+        "description": "Data output set for jobs."
+      }
+    },
+    "bindingForComponent1": {
+      "type": "object",
+      "defaultValue": {
+        "bindingType": "Basic",
+        "source": "",
+        "destination": ""
+      }
+    },
+    "bindingForComponent2": {
+      "type": "object",
+      "defaultValue": {
+        "bindingType": "Basic",
+        "source": "",
+        "destination": ""
+      }
+    }
+  },
+  "variables": {
+    "componentJob1ComputeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('componentJob1ComputeName'))]",
+    "datasetAssetResourceId1": "[resourceId('Microsoft.MachineLearningServices/workspaces/datasets', parameters('datasetAssetName'), parameters('datasetAssetVersion'))]",
+    "componentJob2ComputeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('componentJob2ComputeName'))]",
+    "datasetAssetResourceId2": "[resourceId('Microsoft.MachineLearningServices/workspaces/datasets', parameters('datasetAssetName'), parameters('datasetAssetVersion'))]",
+    "pipelineComputeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('pipelineComputeName'))]",
+    "pipelineBindings": [
+      "[parameters('bindingForComponent1')]",
+      "[parameters('bindingForComponent2')]"
     ]
+  },
+  "resources": [
+    {
+      "type": "Microsoft.MachineLearningServices/workspaces/jobs",
+      "apiVersion": "2021-10-01",
+      "name": "[concat(parameters('workspaceName'), '/', parameters('jobName'))]",
+      "properties": {
+        "jobType": "Pipeline",
+        "computeId": "[variables('pipelineComputeResourceId')]",
+        "displayName": "[parameters('jobName')]",
+        "experimentName": "[parameters('experimentName')]",
+        "description": "[parameters('pipelineJobDescription')]",
+        "settings": {
+          "continueRunOnStepFailure": "[parameters('continueRunOnStepFailure')",
+          "defaultDatastoreName": "[parameters('defaultDatastoreName')"
+        },
+        "componentJobs": {
+          "componentJob1": {
+            "computeId": "[variables('componentJob1ComputeResourceId')]",
+            "componentId": "[parameters('componentJob1ComponentId')",
+            "inputs": "[parameters('componentJob1Inputs')",
+            "outputs": "[parameters('componentJob1Outputs')",
+            "overrides": "[parameters('componentJob1Overrides')"
+          },
+          "componentJob2": {
+            "computeId": "[variables('componentJob2ComputeResourceId')]",
+            "componentId": "[parameters('componentJob2ComponentId')",
+            "inputs": "[parameters('componentJob2Inputs')",
+            "outputs": "[parameters('componentJob2Outputs')",
+            "overrides": "[parameters('componentJob2Overrides')"
+          }
+        },
+        "inputs": "[parameters('pipelineSampleInputs')",
+        "outputs": "[parameters('pipelineSampleOutputs')",
+        "bindings": "[variables('pipelineBindings')",
+        "properties": {},
+        "tags": {}
+      }
+    }
+  ]
 }
