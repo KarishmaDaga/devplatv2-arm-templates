@@ -2,260 +2,260 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-		"workspaceName": {
-			"type": "String",
-			"metadata": {
-				"description": "Specifies the name of the Azure Machine Learning Workspace which will contain this job."
-			}
-		},
-		"jobName": {
-			"defaultValue": "testCommandJob",
-			"type": "String"
-		},
-		"experimentName": {
-			"type": "String",
-			"default": "Default",
-			"metadata": {
-				"description": "The name of the experiment the job belongs to. If not set, the job is placed in the 'Default' experiment."
-			}
-		},
-		"displayName": {
-			"type": "String",
-			"metadata": {
-				"description": "The display name of the job belongs to."
-			}
-		},
-		"commandJobDescription": {
-			"defaultValue": "A command job created by an ARM template",
-			"type": "String"
-		},
-		"command": {
-			"defaultValue": "python train.py",
-			"type": "String",
-			"minLength": 1,
-			"metadata": {
-				"description": "The command to execute on startup of the job. eg. 'python train.py'"
-			}
-		},
-		"codeAssetName": {
-			"type": "String"
-		},
-		"codeAssetVersion": {
-			"defaultValue": "1",
-			"type": "String"
-		},
-		"computeName": {
-			"type": "String"
-		},
-		"computeInstanceCount": {
-			"defaultValue": 1,
-			"type": "Int"
-		},
-		"environmentName": {
-			"type": "String",
-			"defaultValue": ""
-		},
-		"environmentVersion": {
-			"defaultValue": "1",
-			"type": "String"
-		},
-		"inputs": {
-			"type": "Object",
-			"defaultValue": {
-				"datasetBinding": {
-					"jobInputType": "Dataset",
-					"datasetId": "[variables('datasetAssetResourceId')]",
-					"mode" : "ReadOnlyMount"
-				},
-				"literalBinding": {
-					"jobInputType": "Literal",
-					"value": "1"
-				},
-				"azureBlobBinding": {
-					"jobInputType": "Uri",
-					"uri": {
-						"file": "https://azuremlexamples.blob.core.windows.net/datasets/iris.csv%"
-					},
-					"mode" : "ReadOnlyMount"
-				}
-			},
-			"metadata": {
-				"description": "Mapping of input data bindings used in the job. The default is an example job input object."
-			}
-		},
-		"outputs": {
-			"type": "Object",
-			"defaultValue": {
-				"datasetOutput": {
-					"jobOutputType": "Dataset",
-					"datasetId": "[variables('datasetAssetResourceId')]",
-					"mode" : "ReadWriteMount"
-				},
-				"azureBlobOutput": {
-					"jobOutputType": "Uri"
-				}
-			},
-			"metadata": {
-				"description": "Mapping of output data bindings used in the job. The default is an example job output object."
-			}
-		},
-		"identityType": {
-			"type": "String",
-			"allowedValues": [
-				"AmlToken",
-				"ManagedIdentity"
-			],
-			"defaultValue": "AmlToken"
-		},
-		"managedIdentity": {
-			"type": "Object",
-			"defaultValue": {
-				"identityType": "Managed",
-				"clientId": {
-					"type": "string",
-					"defaultValue": "",
-					"metadata": {
-						"description": "Specifies a user-assigned identity by client ID. For system-assigned, do not set this field."
-					}
-				},
-				"objectId": {
-					"type": "string",
-					"defaultValue": "",
-					"metadata": {
-						"description": "Specifies a user-assigned identity by object ID. For system-assigned, do not set this field."
-					}
-				},
-				"resourceId": {
-					"type": "string",
-					"defaultValue": "",
-					"metadata": {
-						"description": "Specifies a user-assigned identity by ARM resource ID. For system-assigned, do not set this field."
-					}
-				}
-			}
-		},
-		"distributionConfigurationType": {
-			"type": "String",
-			"allowedValues": [
-				"Mpi",
-				"Tensorflow",
-				"PyTorch",
-				null
-			],
-			"metadata": {
-				"description": "Enum to determine the job distribution type."
-			}
-		},
-		"resourceConfiguration": {
-			"type": "Object",
-			"defaultValue": {
-				"instanceCount": {
-					"type": "int",
-					"defaultValue": 1,
-					"metadata": {
-						"description": "Optional number of instances or nodes used by the compute target."
-					}
-				},
-				"instanceType": {
-					"type": "string",
-					"defaultValue": "",
-					"metadata": {
-						"description": "Optional type of VM used as supported by the compute target."
-					}
-				},
-				"properties": {
-					"type": "object",
-					"defaultValue": {},
-					"metadata": {
-						"description": "Additional properties bag."
-					}
-				}
-			},
-			"metadata": {
-				"description": "Optional compute resource configuration."
-			}
-		},
-		"jobLimitTimeout": {
-			"type": "string",
-			"defaultValue": "PT5S",
-			"metadata": {
-				"description": "The max run duration in ISO 8601 format, after which the job will be cancelled. Only supports duration with precision as low as Seconds."
-			}
-		}
-	},
-	"variables": {
-		"codeVersionResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/codes/versions', parameters('workspaceName'), parameters('codeAssetName'), parameters('codeAssetVersion'))]",
-		"environmentResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentName'), parameters('environmentVersion'))]",
-		"computeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('computeName'))]",
-		"distributionType": {
-			"Mpi": {
-				"type": "Object",
-				"defaultValue": {
-					"distributionType": "Mpi",
-					"processCountPerInstance": {
-						"type": "int",
-						"defaultValue": 1,
-						"metadata": {
-							"description": "Number of processes per node."
-						}
-					}
-				}
-			},
-			"Tensorflow": {
-				"type": "Object",
-				"defaultValue": {
-					"distributionType": "Tensorflow",
-					"workerCount": {
-						"type": "int",
-						"defaultValue": 1,
-						"metadata": {
-							"description": "Number of workers. If not specified, will default to the instance count."
-						}
-					}
-				}
-			},
-			"PyTorch": {
-				"type": "Object",
-				"defaultValue": {
-					"distributionType": "Pytorch",
-					"processCountPerInstance": {
-						"type": "int",
-						"defaultValue": 1,
-						"metadata": {
-							"description": "Number of processes per node."
-						}
-					}
-				}
-			},
-			"null": null
-		}
-	},
-	"resources": [
-			{
-			"type": "Microsoft.MachineLearningServices/workspaces/jobs",
-			"apiVersion": "2021-10-01",
-			"name": "[concat(parameters('workspaceName'), '/', parameters('jobName'))]",
-			"properties": {
-				"jobType": "Command",
-				"displayName": "[parameters('jobName')]",
-				"experimentName": "[parameters('experimentName')]",
-				"identityType": "[if(equals(parameters('identityType'),'AMLToken'), 'AMLToken', parameters('managedIdentityObject'))]",
-				"description": "[parameters('commandJobDescription')]",
-				"codeId": "[variables('codeVersionResourceId')]",
-				"environmentId": "[if(equals(parameters('environmentName'),''), json('null'), variables('environmentResourceId'))]",
-				"inputs": "[parameters('inputs')",
-				"outputs": "[parameters('outputs')",
-				"command": "[parameters('command')]",
-				"computeId": "[variables('computeResourceId')]",
-				"distributionConfiguration": "[variables('distributionType')[parameters('distributionConfigurationType')]]",
-				"resourceConfiguration": "[parameters('resourceConfiguration')]",
-				"limits": {
-					"jobLimitsType": "Command",
-					"timeout": "[parameters('jobLimitTimeout')]"
-				},
-				"properties": {},
-				"tags": {}
-			}
-		}
-	]
+    "workspaceName": {
+      "type": "String",
+      "metadata": {
+        "description": "Specifies the name of the Azure Machine Learning Workspace which will contain this job."
+      }
+    },
+    "jobName": {
+      "defaultValue": "testCommandJob",
+      "type": "String"
+    },
+    "experimentName": {
+      "type": "String",
+      "default": "Default",
+      "metadata": {
+        "description": "The name of the experiment the job belongs to. If not set, the job is placed in the 'Default' experiment."
+      }
+    },
+    "displayName": {
+      "type": "String",
+      "metadata": {
+        "description": "The display name of the job belongs to."
+      }
+    },
+    "commandJobDescription": {
+      "defaultValue": "A command job created by an ARM template",
+      "type": "String"
+    },
+    "command": {
+      "defaultValue": "python train.py",
+      "type": "String",
+      "minLength": 1,
+      "metadata": {
+        "description": "The command to execute on startup of the job. eg. 'python train.py'"
+      }
+    },
+    "codeAssetName": {
+      "type": "String"
+    },
+    "codeAssetVersion": {
+      "defaultValue": "1",
+      "type": "String"
+    },
+    "computeName": {
+      "type": "String"
+    },
+    "computeInstanceCount": {
+      "defaultValue": 1,
+      "type": "Int"
+    },
+    "environmentName": {
+      "type": "String",
+      "defaultValue": ""
+    },
+    "environmentVersion": {
+      "defaultValue": "1",
+      "type": "String"
+    },
+    "inputs": {
+      "type": "Object",
+      "defaultValue": {
+        "datasetBinding": {
+          "jobInputType": "Dataset",
+          "datasetId": "[variables('datasetAssetResourceId')]",
+          "mode": "ReadOnlyMount"
+        },
+        "literalBinding": {
+          "jobInputType": "Literal",
+          "value": "1"
+        },
+        "azureBlobBinding": {
+          "jobInputType": "Uri",
+          "uri": {
+            "file": "https://azuremlexamples.blob.core.windows.net/datasets/iris.csv%"
+          },
+          "mode": "ReadOnlyMount"
+        }
+      },
+      "metadata": {
+        "description": "Mapping of input data bindings used in the job. The default is an example job input object."
+      }
+    },
+    "outputs": {
+      "type": "Object",
+      "defaultValue": {
+        "datasetOutput": {
+          "jobOutputType": "Dataset",
+          "datasetId": "[variables('datasetAssetResourceId')]",
+          "mode": "ReadWriteMount"
+        },
+        "azureBlobOutput": {
+          "jobOutputType": "Uri"
+        }
+      },
+      "metadata": {
+        "description": "Mapping of output data bindings used in the job. The default is an example job output object."
+      }
+    },
+    "identityType": {
+      "type": "String",
+      "allowedValues": [
+        "AmlToken",
+        "ManagedIdentity"
+      ],
+      "defaultValue": "AmlToken"
+    },
+    "managedIdentity": {
+      "type": "Object",
+      "defaultValue": {
+        "identityType": "Managed",
+        "clientId": {
+          "type": "string",
+          "defaultValue": "",
+          "metadata": {
+            "description": "Specifies a user-assigned identity by client ID. For system-assigned, do not set this field."
+          }
+        },
+        "objectId": {
+          "type": "string",
+          "defaultValue": "",
+          "metadata": {
+            "description": "Specifies a user-assigned identity by object ID. For system-assigned, do not set this field."
+          }
+        },
+        "resourceId": {
+          "type": "string",
+          "defaultValue": "",
+          "metadata": {
+            "description": "Specifies a user-assigned identity by ARM resource ID. For system-assigned, do not set this field."
+          }
+        }
+      }
+    },
+    "distributionConfigurationType": {
+      "type": "String",
+      "allowedValues": [
+        "Mpi",
+        "Tensorflow",
+        "PyTorch",
+        null
+      ],
+      "metadata": {
+        "description": "Enum to determine the job distribution type."
+      }
+    },
+    "resourceConfiguration": {
+      "type": "Object",
+      "defaultValue": {
+        "instanceCount": {
+          "type": "int",
+          "defaultValue": 1,
+          "metadata": {
+            "description": "Optional number of instances or nodes used by the compute target."
+          }
+        },
+        "instanceType": {
+          "type": "string",
+          "defaultValue": "",
+          "metadata": {
+            "description": "Optional type of VM used as supported by the compute target."
+          }
+        },
+        "properties": {
+          "type": "object",
+          "defaultValue": {},
+          "metadata": {
+            "description": "Additional properties bag."
+          }
+        }
+      },
+      "metadata": {
+        "description": "Optional compute resource configuration."
+      }
+    },
+    "jobLimitTimeout": {
+      "type": "string",
+      "defaultValue": "PT5S",
+      "metadata": {
+        "description": "The max run duration in ISO 8601 format, after which the job will be cancelled. Only supports duration with precision as low as Seconds."
+      }
+    }
+  },
+  "variables": {
+    "codeVersionResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/codes/versions', parameters('workspaceName'), parameters('codeAssetName'), parameters('codeAssetVersion'))]",
+    "environmentResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentName'), parameters('environmentVersion'))]",
+    "computeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('computeName'))]",
+    "distributionType": {
+      "Mpi": {
+        "type": "Object",
+        "defaultValue": {
+          "distributionType": "Mpi",
+          "processCountPerInstance": {
+            "type": "int",
+            "defaultValue": 1,
+            "metadata": {
+              "description": "Number of processes per node."
+            }
+          }
+        }
+      },
+      "Tensorflow": {
+        "type": "Object",
+        "defaultValue": {
+          "distributionType": "Tensorflow",
+          "workerCount": {
+            "type": "int",
+            "defaultValue": 1,
+            "metadata": {
+              "description": "Number of workers. If not specified, will default to the instance count."
+            }
+          }
+        }
+      },
+      "PyTorch": {
+        "type": "Object",
+        "defaultValue": {
+          "distributionType": "Pytorch",
+          "processCountPerInstance": {
+            "type": "int",
+            "defaultValue": 1,
+            "metadata": {
+              "description": "Number of processes per node."
+            }
+          }
+        }
+      },
+      "null": null
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.MachineLearningServices/workspaces/jobs",
+      "apiVersion": "2021-10-01",
+      "name": "[concat(parameters('workspaceName'), '/', parameters('jobName'))]",
+      "properties": {
+        "jobType": "Command",
+        "displayName": "[parameters('jobName')]",
+        "experimentName": "[parameters('experimentName')]",
+        "identityType": "[if(equals(parameters('identityType'),'AMLToken'), 'AMLToken', parameters('managedIdentityObject'))]",
+        "description": "[parameters('commandJobDescription')]",
+        "codeId": "[variables('codeVersionResourceId')]",
+        "environmentId": "[if(equals(parameters('environmentName'),''), json('null'), variables('environmentResourceId'))]",
+        "inputs": "[parameters('inputs')",
+        "outputs": "[parameters('outputs')",
+        "command": "[parameters('command')]",
+        "computeId": "[variables('computeResourceId')]",
+        "distributionConfiguration": "[variables('distributionType')[parameters('distributionConfigurationType')]]",
+        "resourceConfiguration": "[parameters('resourceConfiguration')]",
+        "limits": {
+          "jobLimitsType": "Command",
+          "timeout": "[parameters('jobLimitTimeout')]"
+        },
+        "properties": {},
+        "tags": {}
+      }
+    }
+  ]
 }
