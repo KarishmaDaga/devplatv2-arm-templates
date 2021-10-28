@@ -95,7 +95,6 @@
             "defaultValue": {
                 "datasetOutput": {
                     "jobOutputType": "Dataset",
-                    "datasetId": "[variables('datasetAssetResourceId')]",
                     "mode": "ReadWriteMount"
                 },
                 "azureBlobOutput": {
