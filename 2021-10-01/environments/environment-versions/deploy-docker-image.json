@@ -1,0 +1,77 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspaceName": {
+      "type": "String"
+    },
+    "environmentAssetName": {
+      "type": "String",
+	  "defaultValue": "testEnvironmentImageGA"
+    },
+    "environmentAssetVersion": {
+      "defaultValue": "1",
+      "type": "String"
+    },
+    "environmentDescription": {
+      "defaultValue": "This is a test description for an environment created from an ARM template",
+      "type": "String"
+    },
+    "condaFile": {
+      "defaultValue": "",
+      "type": "String",
+      "metadata": {
+        "description": "Standard configuration file used by Conda that lets you install any kind of package, including Python, R, and C/C++ packages."
+      }
+    },
+    "isAnonymous": {
+      "defaultValue": false,
+      "type": "Bool"
+    },
+	"environmentType": {
+		"type": "string",
+		"allowedValues": [
+			"Curated",
+			"UserCreated"
+		]
+	},
+    "dockerImage": {
+      "defaultValue": "",
+      "type": "String",
+      "metadata": {
+        "description": "Docker image path, for example: 'docker.io/tensorflow/serving:latest'."
+      }
+    },
+	"operatingSystemType": {
+		"type": "string",
+		"allowedValues": [
+			"Linux",
+			"Windows"
+		]
+	},
+	"inferenceConfig": {
+		"type": "object",
+		"defaultValue": {},
+		"metadata": {
+			"description": "Defines configuration specific to inference."
+		}
+	}
+  },
+  "resources": [
+    {
+      "type": "Microsoft.MachineLearningServices/workspaces/environments/versions",
+      "apiVersion": "2021-10-01",
+      "name": "[concat(parameters('workspaceName'), '/', parameters('environmentAssetName'), '/', parameters('environmentAssetVersion'))]",
+      "properties": {
+        "isAnonymous": "[parameters('isAnonymous')]",
+		"description": "[parameters('environmentDescription')]",
+		"image": "[parameters('dockerImage')]",
+		"condaFile": "[parameters('condaFile')]",
+		"inferenceConfig": "[parameters('inferenceConfig')]",
+		"osType": "[parameters('operatingSystemType')]",
+        "properties": {},
+        "tags": {}
+      }
+    }
+  ]
+}
