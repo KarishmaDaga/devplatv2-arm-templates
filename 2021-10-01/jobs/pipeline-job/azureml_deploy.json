@@ -84,7 +84,7 @@
     },
     "componentJob1Overrides": {
       "type": "object",
-      "default": {},
+      "defaultValue": {},
       "metadata": {
         "description": "Override component default settings"
       }
@@ -133,7 +133,7 @@
     },
     "componentJob2Overrides": {
       "type": "object",
-      "default": {},
+      "defaultValue": {},
       "metadata": {
         "description": "Override component default settings"
       }
