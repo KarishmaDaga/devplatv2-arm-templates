@@ -195,20 +195,14 @@
     "datasetAssetResourceId2": "[resourceId('Microsoft.MachineLearningServices/workspaces/datasets', parameters('componentJob2DatasetAssetName'), parameters('componentJob2DatasetAssetVersion'))]",
     "pipelineComputeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('pipelineComputeName'))]",
     "bindingForComponent1": {
-      "type": "object",
-      "defaultValue": {
-        "bindingType": "Basic",
-        "source": "[parameters('bindingSourceForComponent1')]",
-        "destination": "[parameters('bindingDestinationForComponent1')]"
-      }
+      "bindingType": "Basic",
+      "source": "[parameters('bindingSourceForComponent1')]",
+      "destination": "[parameters('bindingDestinationForComponent1')]"
     },
     "bindingForComponent2": {
-      "type": "object",
-      "defaultValue": {
-        "bindingType": "Basic",
-        "source": "[parameters('bindingSourceForComponent2')]",
-        "destination": "[parameters('bindingDestinationForComponent2')]"
-      }
+      "bindingType": "Basic",
+      "source": "[parameters('bindingSourceForComponent2')]",
+      "destination": "[parameters('bindingDestinationForComponent2')]"
     }
   },
   "resources": [
