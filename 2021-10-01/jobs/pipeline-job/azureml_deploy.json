@@ -26,7 +26,7 @@
       }
     },
     "pipelineJobDescription": {
-      "defaultValue": "A command job created by an ARM template",
+      "defaultValue": "A pipeline job created by an ARM template",
       "type": "String"
     },
     "continueRunOnStepFailure": {
