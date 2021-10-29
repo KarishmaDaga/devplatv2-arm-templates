@@ -32,7 +32,6 @@
       "allowedValues": [
         "AmlToken",
         "ManagedIdentity",
-        null
       ],
       "defaultValue": "AmlToken"
     },
@@ -207,7 +206,6 @@
         "Mpi",
         "Tensorflow",
         "PyTorch",
-        null
       ],
       "type": "String",
       "metadata": {
