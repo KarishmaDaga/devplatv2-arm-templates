@@ -1,0 +1,102 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspaceName": {
+      "type": "String"
+    },
+    "environmentAssetName": {
+      "type": "String",
+      "defaultValue": "testEnvironmentBuildGA"
+    },
+    "environmentAssetVersion": {
+      "defaultValue": "1",
+      "type": "String"
+    },
+    "environmentDescription": {
+      "defaultValue": "This is a test description for an environment created from an ARM template",
+      "type": "String"
+    },
+    "dockerContextURI": {
+      "type": "string",
+      "defaultvalue": "",
+      "metadata": {
+        "description": "URI of the Docker build context used to build the image. Supports blob URIs on environment creation and may return blob or Git URIs."
+      }
+    },
+    "dockerFilePath": {
+      "type": "string",
+      "defaultValue": "Dockerfile",
+      "metadata": {
+        "description": "Docker file path, for example: prod/Dockerfile"
+      }
+    },
+    "isAnonymous": {
+      "defaultValue": false,
+      "type": "Bool"
+    },
+    "operatingSystemType": {
+      "type": "string",
+      "allowedValues": [
+        "Linux",
+        "Windows"
+      ]
+    },
+    "livenessRoutePath": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "livenessRoutePort": {
+      "defaultValue": 0,
+      "type": "Int"
+    },
+    "readinessRoutePath": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "readinessRoutePort": {
+      "defaultValue": 0,
+      "type": "Int"
+    },
+    "scoringRoutePath": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "scoringRoutePort": {
+      "defaultValue": 0,
+      "type": "Int"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.MachineLearningServices/workspaces/environments/versions",
+      "apiVersion": "2021-10-01",
+      "name": "[concat(parameters('workspaceName'), '/', parameters('environmentAssetName'), '/', parameters('environmentAssetVersion'))]",
+      "properties": {
+        "isAnonymous": "[parameters('isAnonymous')]",
+        "description": "[parameters('environmentDescription')]",
+        "build": {
+          "contextUri": "[parameters('dockerContextURI')]",
+          "dockerfilePath": "[parameters('dockerfilePath')]"
+        },
+        "inferenceConfig": {
+          "livenessRoute": {
+            "path": "[parameters('livenessRoutePath')]",
+            "port": "[parameters('livenessRoutePort')]"
+          },
+          "readinessRoute": {
+            "path": "[parameters('readinessRoutePath')]",
+            "port": "[parameters('readinessRoutePort')]"
+          },
+          "scoringRoute": {
+            "path": "[parameters('scoringRoutePath')]",
+            "port": "[parameters('scoringRoutePort')]"
+          }
+        },
+        "osType": "[parameters('operatingSystemType')]",
+        "properties": {},
+        "tags": {}
+      }
+    }
+  ]
+}
