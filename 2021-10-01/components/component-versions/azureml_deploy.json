@@ -1,114 +1,114 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "workspaceName": {
-            "type": "String"
-        },
-        "componentAssetName": {
-            "defaultValue": "testComponentGA",
-            "type": "String"
-        },
-        "componentAssetVersion": {
-            "defaultValue": "1",
-            "type": "String"
-        },
-        "componentDisplayName": {
-            "defaultValue": "testDisplayName",
-            "type": "String",
-            "metadata": {
-                "description": "The display name of the pipeline the component belongs to."
-            }
-        },
-        "componentDescription": {
-            "defaultValue": "A component created by an ARM template",
-            "type": "String"
-        },
-        "componentTags": {
-            "defaultValue": {
-                "tag1": "value1",
-                "tag2": "value2",
-                "tag3": "value3"
-            },
-            "type": "Object"
-        },
-        "codeAssetName": {
-            "type": "String"
-        },
-        "codeAssetVersion": {
-            "defaultValue": "1",
-            "type": "String"
-        },
-        "command": {
-            "defaultValue": "python train.py",
-            "minLength": 1,
-            "type": "String",
-            "metadata": {
-                "description": "The command to execute on startup of the job. eg. 'python train.py'"
-            }
-        },
-        "environmentAssetName": {
-            "type": "String"
-        },
-        "environmentAssetVersion": {
-            "defaultValue": "1",
-            "type": "String"
-        },
-        "isDeterministic": {
-            "defaultValue": true,
-            "type": "Bool"
-        },
-        "inputs": {
-            "defaultValue": {
-                "param1": {
-                    "name": "param1",
-                    "optional": "False",
-                    "description": "string parameter",
-                    "type": "String"
-                },
-                "param2": {
-                    "name": "param2",
-                    "optional": "False",
-                    "description": "integer parameter",
-                    "type": "Integer"
-                }
-            },
-            "type": "Object"
-        },
-        "outputs": {
-            "defaultValue": {
-                "output_port": {
-                    "name": "output_port",
-                    "description": "output port",
-                    "type": "AnyDirectory"
-                }
-            },
-            "type": "Object"
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspaceName": {
+      "type": "String"
     },
-    "variables": {
-        "codeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/codes/versions', parameters('workspaceName'), parameters('codeAssetName'), parameters('codeAssetVersion'))]",
-        "environmentResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentAssetName'), parameters('environmentAssetVersion'))]"
+    "componentAssetName": {
+      "defaultValue": "testComponentGA",
+      "type": "String"
     },
-    "resources": [
-        {
-            "type": "Microsoft.MachineLearningServices/workspaces/components/versions",
-            "apiVersion": "2021-10-01",
-            "name": "[concat(parameters('workspaceName'), '/', parameters('componentAssetName'),'/', parameters('componentAssetVersion'))]",
-            "properties": {
-                "componentSpec": {
-                    "type": "command"
-                    "code": "[variables('codeResourceId')]",
-                    "command": "[parameters('command')]",
-                    "description": "[parameters('componentDescription')]",
-                    "displayName": "[parameters('componentDisplayName')]",
-                    "environment": "[variables('environmentResourceId')]",
-                    "inputs": "[parameters('inputs')]",
-                    "outputs": "[parameters('outputs')]",
-                    "isDeterministic": "[parameters('isDeterministic')]",
-                    "tags": "[parameters('componentTags')]"
-                }
-            }
+    "componentAssetVersion": {
+      "defaultValue": "1",
+      "type": "String"
+    },
+    "componentDisplayName": {
+      "defaultValue": "testDisplayName",
+      "type": "String",
+      "metadata": {
+        "description": "The display name of the pipeline the component belongs to."
+      }
+    },
+    "componentDescription": {
+      "defaultValue": "A component created by an ARM template",
+      "type": "String"
+    },
+    "componentTags": {
+      "defaultValue": {
+        "tag1": "value1",
+        "tag2": "value2",
+        "tag3": "value3"
+      },
+      "type": "Object"
+    },
+    "codeAssetName": {
+      "type": "String"
+    },
+    "codeAssetVersion": {
+      "defaultValue": "1",
+      "type": "String"
+    },
+    "command": {
+      "defaultValue": "python train.py",
+      "minLength": 1,
+      "type": "String",
+      "metadata": {
+        "description": "The command to execute on startup of the job. eg. 'python train.py'"
+      }
+    },
+    "environmentAssetName": {
+      "type": "String"
+    },
+    "environmentAssetVersion": {
+      "defaultValue": "1",
+      "type": "String"
+    },
+    "isDeterministic": {
+      "defaultValue": true,
+      "type": "Bool"
+    },
+    "inputs": {
+      "defaultValue": {
+        "param1": {
+          "name": "param1",
+          "optional": "False",
+          "description": "string parameter",
+          "type": "String"
+        },
+        "param2": {
+          "name": "param2",
+          "optional": "False",
+          "description": "integer parameter",
+          "type": "Integer"
         }
-    ]
+      },
+      "type": "Object"
+    },
+    "outputs": {
+      "defaultValue": {
+        "output_port": {
+          "name": "output_port",
+          "description": "output port",
+          "type": "AnyDirectory"
+        }
+      },
+      "type": "Object"
+    }
+  },
+  "variables": {
+    "codeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/codes/versions', parameters('workspaceName'), parameters('codeAssetName'), parameters('codeAssetVersion'))]",
+    "environmentResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentAssetName'), parameters('environmentAssetVersion'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.MachineLearningServices/workspaces/components/versions",
+      "apiVersion": "2021-10-01",
+      "name": "[concat(parameters('workspaceName'), '/', parameters('componentAssetName'),'/', parameters('componentAssetVersion'))]",
+      "properties": {
+        "componentSpec": {
+          "type": "command",
+          "code": "[variables('codeResourceId')]",
+          "command": "[parameters('command')]",
+          "description": "[parameters('componentDescription')]",
+          "displayName": "[parameters('componentDisplayName')]",
+          "environment": "[variables('environmentResourceId')]",
+          "inputs": "[parameters('inputs')]",
+          "outputs": "[parameters('outputs')]",
+          "isDeterministic": "[parameters('isDeterministic')]",
+          "tags": "[parameters('componentTags')]"
+        }
+      }
+    }
+  ]
 }
