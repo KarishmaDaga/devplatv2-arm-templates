@@ -111,7 +111,6 @@
                 "Mpi",
                 "Tensorflow",
                 "PyTorch",
-                null
             ],
             "type": "String",
             "metadata": {
@@ -199,8 +198,7 @@
                         }
                     }
                 }
-            },
-            "null": null
+            }
         }
     },
     "resources": [
