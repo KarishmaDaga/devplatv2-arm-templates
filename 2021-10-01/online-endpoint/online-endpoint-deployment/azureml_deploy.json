@@ -176,7 +176,6 @@
 			"allowedValues": [
 				"Default",
         		"TargetUtilization",
-				null
 			]
 		}
     },
