@@ -182,7 +182,7 @@
     },
 	"variables": {
 		"codeAssetResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/codes/versions', parameters('workspaceName'), parameters('codeAssetName'), parameters('codeAssetVersion'))]",
-		"environmentAssetResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentAssetName'), parameters('environmentVersion'))]"
+		"environmentAssetResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentAssetName'), parameters('environmentAssetVersion'))]"
 	},
     "resources": [
         {
