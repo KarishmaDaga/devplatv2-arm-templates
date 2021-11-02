@@ -318,7 +318,6 @@
         "distributionType": "Mpi",
         "processCountPerInstance": "[parameters('processCountPerInstance')]"
       },
-      "null": null
     }
   },
   "resources": [
