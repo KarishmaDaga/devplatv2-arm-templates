@@ -39,6 +39,7 @@
       "metadata": {
         "description": "If the name version are system generated (anonymous registration)."
       }
+    }
   },
   "resources": [
     {
@@ -47,10 +48,10 @@
       "name": "[concat(parameters('workspaceName'), '/', parameters('codeAssetName'), '/', parameters('codeAssetVersion'))]",
       "properties": {
         "description": "[parameters('codeAssetDescription')]",
-	"codeUri": "[parameters('codeUri')]",
-        "isAnonymous": "[parameters('isAnonymous')]"
+        "codeUri": "[parameters('codeUri')]",
+        "isAnonymous": "[parameters('isAnonymous')]",
         "properties": {},
-        "tags": {},
+        "tags": {}
       }
     }
   ]
