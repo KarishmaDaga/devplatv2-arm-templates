@@ -6,14 +6,14 @@
       "type": "String"
     },
     "batchDeploymentName": {
-      "defaultValue": "testbatchdeploymentGA",
+      "defaultValue": "testBatchEndpointDeploymentGA",
       "type": "String"
     },
     "batchDeploymentDescription": {
-      "defaultValue": "This is a batch deployment created by an ARM template",
+      "defaultValue": "This is a batch endpoint deployment created by an ARM template",
       "type": "String"
     },
-	"batchEndpointName": {
+    "batchEndpointName": {
       "type": "String"
     },
     "environmentName": {
@@ -24,10 +24,10 @@
       "defaultValue": "1",
       "type": "String"
     },
-	"environmentVariables": {
-		"type": "object",
-		"defaultValue": {}
-	},
+    "environmentVariables": {
+      "type": "object",
+      "defaultValue": {}
+    },
     "codeAssetName": {
       "defaultValue": "",
       "type": "String"
@@ -49,7 +49,7 @@
     },
     "scoringScript": {
       "defaultValue": "score.py",
-	  "minLength": 1,
+      "minLength": 1,
       "type": "String"
     },
     "computeName": {
@@ -60,20 +60,20 @@
       "defaultValue": 0,
       "type": "Int"
     },
-	"computeInstanceType": {
+    "computeInstanceType": {
       "defaultValue": "",
       "type": "String"
     },
-	"maxConcurrencyPerInstance": {
-		"type": "int",
-		"defaultValue": 1,
-		"metadata": {
-			"description": "Indicates maximum number of parallelism per instance."
-		}
-	},
+    "maxConcurrencyPerInstance": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "Indicates maximum number of parallelism per instance."
+      }
+    },
     "errorThreshold": {
       "type": "Int",
-	  "defaultValue": -1,
+      "defaultValue": -1,
       "metadata": {
         "description": "If the error count for the entire input goes above this value, the batch inference will be aborted. Range is [-1, int.MaxValue]. For FileDataset, this value is the count of file failures. For TabularDataset, this value is the count of record failures. If set to -1 (the lower bound), all failures during batch inference will be ignored."
       }
@@ -84,7 +84,7 @@
         "Warning",
         "Debug"
       ],
-	  "defaultValue": "Info",
+      "defaultValue": "Info",
       "type": "String",
       "metadata": {
         "description": "Logging level for batch inference operation"
@@ -111,21 +111,21 @@
         "description": "Maximum retry count for a mini-batch."
       }
     },
-	"outputAction": {
-		"type": "string",
-		"allowedValues": [
-			"SummaryOnly",
-        	"AppendRow"
-		],
-		"defaultValue": "AppendRow",
-		"metadata": {
-			"description": "Enum to determine how batch inferencing will handle output"
-		}
-	},
-	"outputFilename": {
-		"type": "string",
-		"defaultValue": "predictions.csv"
-	},
+    "outputAction": {
+      "type": "string",
+      "allowedValues": [
+        "SummaryOnly",
+        "AppendRow"
+      ],
+      "defaultValue": "AppendRow",
+      "metadata": {
+        "description": "Enum to determine how batch inferencing will handle output"
+      }
+    },
+    "outputFilename": {
+      "type": "string",
+      "defaultValue": "predictions.csv"
+    },
     "timeout": {
       "defaultValue": "PT30S",
       "type": "String",
@@ -133,14 +133,18 @@
         "description": "Invocation timeout for a mini-batch, in ISO 8601 format."
       }
     },
-	"properties": {
-		"type": "object",
-		"defaultValue": {}
-	},
-	"tags": {
-		"type": "object",
-		"defaultValue": {}
-	}
+    "properties": {
+      "type": "object",
+      "defaultValue": {}
+    },
+    "tags": {
+      "type": "object",
+      "defaultValue": {
+        "tag1": "value1",
+        "tag2": "value2",
+        "tag3": "value3"
+      }
+    }
   },
   "variables": {
     "environmentResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentName'), parameters('environmentVersion'))]",
@@ -166,20 +170,20 @@
         "environmentVariables": "[variables('environmentVariables')]",
         "errorThreshold": "[parameters('errorThreshold')]",
         "loggingLevel": "[parameters('loggingLevel')]",
-		"maxConcurrencyPerInstance": "[parameters('maxConcurrencyPerInstance')]",
+        "maxConcurrencyPerInstance": "[parameters('maxConcurrencyPerInstance')]",
         "miniBatchSize": "[parameters('miniBatchSize')]",
         "model": {
           "referenceType": "Id",
           "assetId": "[variables('modelAssetResourceId')]"
         },
-		"outputAction": "[parameters('outputAction')]",
-		"outputFilename": "[parameters('outputFilename')]",
+        "outputAction": "[parameters('outputAction')]",
+        "outputFilename": "[parameters('outputFilename')]",
         "properties": "[parameters('properties')]",
-		"resources": {
-			"instanceCount": "[parameters('computeInstanceCount')]",
-			"instanceType": "[parameters('computeInstanceType')]",
-			"properties": {}
-		},
+        "resources": {
+          "instanceCount": "[parameters('computeInstanceCount')]",
+          "instanceType": "[parameters('computeInstanceType')]",
+          "properties": {}
+        },
         "retrySettings": {
           "maxRetries": "[parameters('maxRetries')]",
           "timeout": "[parameters('timeout')]"
