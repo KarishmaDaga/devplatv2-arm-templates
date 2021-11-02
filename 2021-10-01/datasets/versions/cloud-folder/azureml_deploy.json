@@ -27,10 +27,10 @@
         "description": "If the name version are system generated (anonymous registration)."
       }
     },
-    "datasetFolderPath": {
+    "datasetPath": {
       "type": "String",
       "metadata": {
-        "description": "The path of the directory in the datastore."
+        "description": "The path of the directory in the datastore, for example: azureml://datastores/blobStorage/paths/dataFolder/"
       }
     }
   },
@@ -44,7 +44,7 @@
         "isAnonymous": "[parameters('isAnonymous')]",
         "paths": [
           {
-            "folder": "[parameters('datasetFolderPath')]"
+            "folder": "[parameters('datasetPath')]"
           }
         ],
         "properties": {},
