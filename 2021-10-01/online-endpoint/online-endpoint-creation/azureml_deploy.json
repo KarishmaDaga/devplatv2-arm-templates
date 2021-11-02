@@ -1,76 +1,75 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "workspaceName": {
-            "type": "String"
-        },
-        "allowPublicAccess": {
-            "defaultValue": true,
-            "type": "Bool",
-            "metadata": {
-                "description": "Set to true for endpoints that should allow public access when Private Link is enabled."
-            }
-        },
-        "authMode": {
-            "defaultValue": "AMLToken",
-            "allowedValues": [
-                "AMLToken",
-                "Key",
-                "AADToken"
-            ],
-            "type": "String"
-        },
-        "onlineEndpointName": {
-            "defaultValue": "testOnlineEndpointGA",
-            "type": "String"
-        },
-        "onlineEndpointDescription": {
-            "defaultValue": "This is an online endpoint created by an ARM template",
-            "type": "String"
-        },
-        "onlineEndpointTags": {
-            "defaultValue": {
-                "tag1": "value1",
-                "tag2": "value2",
-                "tag3": "value3"
-              }
-            },
-            "type": "Object"
-        },
-        "computeName": {
-            "defaultValue": "",
-            "type": "String"
-        },
-        "traffic": {
-            "defaultValue": {
-                "blue": 100
-            },
-            "type": "Object",
-            "metadata": {
-                "description": "Percentage of traffic from endpoint to divert to each deployment. Traffic values need to sum to 100."
-            }
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspaceName": {
+      "type": "String"
     },
-    "variables": {
-        "location": "[resourceGroup().location]",
-        "computeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('computeName'))]"
+    "allowPublicAccess": {
+      "defaultValue": true,
+      "type": "Bool",
+      "metadata": {
+        "description": "Set to true for endpoints that should allow public access when Private Link is enabled."
+      }
     },
-    "resources": [
-        {
-            "type": "Microsoft.MachineLearningServices/workspaces/onlineEndpoints",
-            "apiVersion": "2021-10-01",
-            "name": "[concat(parameters('workspaceName'), '/', parameters('onlineEndpointName'))]",
-            "location": "[variables('location')]",
-            "tags": "[parameters('onlineEndpointTags')]",
-            "properties": {
-                "allowPublicAccess": "[parameters('allowPublicAccess')]",
-                "authMode": "[parameters('authMode')]",
-                "compute": "[variables('computeResourceId')]",
-                "description": "[parameters('onlineEndpointDescription')]",
-                "properties": {},
-                "traffic": "[parameters('traffic')]"
-            }
-        }
-    ]
+    "authMode": {
+      "defaultValue": "AMLToken",
+      "allowedValues": [
+        "AMLToken",
+        "Key",
+        "AADToken"
+      ],
+      "type": "String"
+    },
+    "onlineEndpointName": {
+      "defaultValue": "testOnlineEndpointGA",
+      "type": "String"
+    },
+    "onlineEndpointDescription": {
+      "defaultValue": "This is an online endpoint created by an ARM template",
+      "type": "String"
+    },
+    "onlineEndpointTags": {
+      "defaultValue": {
+        "tag1": "value1",
+        "tag2": "value2",
+        "tag3": "value3"
+      },
+      "type": "Object"
+    },
+    "computeName": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "traffic": {
+      "defaultValue": {
+        "blue": 100
+      },
+      "type": "Object",
+      "metadata": {
+        "description": "Percentage of traffic from endpoint to divert to each deployment. Traffic values need to sum to 100."
+      }
+    }
+  },
+  "variables": {
+    "location": "[resourceGroup().location]",
+    "computeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('computeName'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.MachineLearningServices/workspaces/onlineEndpoints",
+      "apiVersion": "2021-10-01",
+      "name": "[concat(parameters('workspaceName'), '/', parameters('onlineEndpointName'))]",
+      "location": "[resourceGroup().location]",
+      "tags": "[parameters('onlineEndpointTags')]",
+      "properties": {
+        "allowPublicAccess": "[parameters('allowPublicAccess')]",
+        "authMode": "[parameters('authMode')]",
+        "compute": "[variables('computeResourceId')]",
+        "description": "[parameters('onlineEndpointDescription')]",
+        "traffic": "[parameters('traffic')]",
+        "properties": {}
+      }
+    }
+  ]
 }
