@@ -30,13 +30,7 @@
     "datasetPath": {
       "type": "String",
       "metadata": {
-        "description": "The path of the file in the datastore or https/wasb/adlsgen storage url."
-      }
-    },
-    "datasetFolderPath": {
-      "type": "String",
-      "metadata": {
-        "description": "The path of the file/directory in the datastore or https/wasb/adlsgen storage url."
+        "description": "The path of the file in the datastore, for example: azureml://datastores/blobStorage/paths/datasetFolder/dataset.csv."
       }
     }
   },
