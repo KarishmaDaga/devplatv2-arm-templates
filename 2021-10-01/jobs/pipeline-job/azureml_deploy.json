@@ -43,7 +43,7 @@
     "componentJob1ComponentId": {
       "type": "string",
       "metadata": {
-        "description": "Reference to component artifact, e.g: "
+        "description": "Reference to component artifact, e.g: testComponentGA1"
       }
     },
     "componentJob1ComputeName": {
@@ -58,11 +58,13 @@
       "type": "String"
     },
     "componentJob1Inputs": {
+      "type": "object",
       "defaultValue": {
-        "componentJob1Inputs": {
+        "sampleInputData": {
           "jobInputType": "Dataset",
           "datasetId": "[variables('datasetAssetResourceId1')]",
-          "mode": "ReadOnlyMount"
+          "mode": "ReadOnlyMount",
+          "description": "sample input dataset description"
         }
       },
       "metadata": {
@@ -70,8 +72,9 @@
       }
     },
     "componentJob1Outputs": {
+      "type": "object",
       "defaultValue": {
-        "componentJob1Outputs": {
+        "sampleOutputData": {
           "jobOutputType": "Dataset",
           "mode": "ReadWriteMount"
         }
@@ -81,6 +84,7 @@
       }
     },
     "componentJob1Overrides": {
+      "type": "object",
       "defaultValue": {},
       "metadata": {
         "description": "Override component default settings"
@@ -104,8 +108,9 @@
       "type": "String"
     },
     "componentJob2Inputs": {
+      "type": "object",
       "defaultValue": {
-        "componentJob2Inputs": {
+        "sampleInputData": {
           "jobInputType": "Dataset",
           "datasetId": "[variables('datasetAssetResourceId2')]",
           "mode": "ReadOnlyMount"
@@ -116,8 +121,9 @@
       }
     },
     "componentJob2Outputs": {
+      "type": "object",
       "defaultValue": {
-        "componentJob2Outputs": {
+        "sampleOutputData": {
           "jobOutputType": "Dataset",
           "mode": "ReadWriteMount"
         }
@@ -127,6 +133,7 @@
       }
     },
     "componentJob2Overrides": {
+      "type": "object",
       "defaultValue": {},
       "metadata": {
         "description": "Override component default settings"
@@ -141,6 +148,7 @@
       "defaultValue": "1"
     },
     "pipelineSampleInputs": {
+      "type": "object",
       "defaultValue": {
         "pipelineSampleInputData": {
           "jobInputType": "Dataset",
@@ -153,6 +161,7 @@
       }
     },
     "pipelineSampleOutputs": {
+      "type": "object",
       "defaultValue": {
         "pipelineSampleOutputData": {
           "jobOutputType": "Dataset",
@@ -195,6 +204,20 @@
       "bindingType": "Basic",
       "source": "[parameters('bindingSourceForComponent2')]",
       "destination": "[parameters('bindingDestinationForComponent2')]"
+    },
+    "componentJob1": {
+      "computeId": "[variables('componentJob1ComputeResourceId')]",
+      "componentId": "[parameters('componentJob1ComponentId')",
+      "inputs": "[parameters('componentJob1Inputs')",
+      "outputs": "[parameters('componentJob1Outputs')",
+      "overrides": "[parameters('componentJob1Overrides')"
+    },
+    "componentJob2": {
+      "computeId": "[variables('componentJob2ComputeResourceId')]",
+      "componentId": "[parameters('componentJob2ComponentId')",
+      "inputs": "[parameters('componentJob2Inputs')",
+      "outputs": "[parameters('componentJob2Outputs')",
+      "overrides": "[parameters('componentJob2Overrides')"
     }
   },
   "resources": [
@@ -213,20 +236,8 @@
           "defaultDatastoreName": "[parameters('defaultDatastoreName')"
         },
         "componentJobs": {
-          "componentJob1": {
-            "computeId": "[variables('componentJob1ComputeResourceId')]",
-            "componentId": "[parameters('componentJob1ComponentId')",
-            "inputs": "[parameters('componentJob1Inputs')",
-            "outputs": "[parameters('componentJob1Outputs')",
-            "overrides": "[parameters('componentJob1Overrides')"
-          },
-          "componentJob2": {
-            "computeId": "[variables('componentJob2ComputeResourceId')]",
-            "componentId": "[parameters('componentJob2ComponentId')",
-            "inputs": "[parameters('componentJob2Inputs')",
-            "outputs": "[parameters('componentJob2Outputs')",
-            "overrides": "[parameters('componentJob2Overrides')"
-          }
+          "componentJob1": "[variables('componentJob1')]",
+          "componentJob2": "[variables('componentJob2')]"
         },
         "inputs": "[parameters('pipelineSampleInputs')",
         "outputs": "[parameters('pipelineSampleOutputs')",
