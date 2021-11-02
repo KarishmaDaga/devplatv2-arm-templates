@@ -5,14 +5,6 @@
         "workspaceName": {
             "type": "String"
         },
-        "identityType": {
-            "allowedValues": [
-                "SystemAssigned",
-                "UserAssigned",
-                "None"
-            ],
-            "type": "String"
-        },
         "allowPublicAccess": {
             "defaultValue": true,
             "type": "Bool",
@@ -30,7 +22,7 @@
             "type": "String"
         },
         "onlineEndpointName": {
-            "defaultValue": "testonlineendpointGA",
+            "defaultValue": "testOnlineEndpointGA",
             "type": "String"
         },
         "onlineEndpointDescription": {
@@ -38,7 +30,12 @@
             "type": "String"
         },
         "onlineEndpointTags": {
-            "defaultValue": {},
+            "defaultValue": {
+                "tag1": "value1",
+                "tag2": "value2",
+                "tag3": "value3"
+              }
+            },
             "type": "Object"
         },
         "computeName": {
@@ -66,9 +63,6 @@
             "name": "[concat(parameters('workspaceName'), '/', parameters('onlineEndpointName'))]",
             "location": "[variables('location')]",
             "tags": "[parameters('onlineEndpointTags')]",
-            "identity": {
-                "type": "[parameters('identityType')]"
-            },
             "properties": {
                 "allowPublicAccess": "[parameters('allowPublicAccess')]",
                 "authMode": "[parameters('authMode')]",
