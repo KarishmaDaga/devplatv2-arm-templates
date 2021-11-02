@@ -5,245 +5,357 @@
     "workspaceName": {
       "type": "String",
       "metadata": {
-        "description": "Specifies the name of the Azure Machine Learning Workspace which will contain this compute."
+        "description": "Specifies the name of the Azure Machine Learning Workspace which will contain this job."
       }
     },
-    "onlineEndpointName": {
-      "defaultValue": "testOnlineEndpointGA",
-      "type": "String",
-      "metadata": {
-        "description": "Specifies the name of the Azure Machine Learning online endpoint which will be deployed."
-      }
-    },
-    "onlineDeploymentName": {
-      "defaultValue": "testOnlineEndpointDeploymentGA",
-      "type": "String",
-      "metadata": {
-        "description": "Specifies the name of the Azure Machine Learning online endpoint which will be deployed."
-      }
-    },
-    "onlineEndpointDescription": {
-      "defaultValue": "This is an online endpoint deployment created by an ARM template",
+    "sweepJobName": {
+      "defaultValue": "testSweepJobGA",
       "type": "String"
     },
-    "onlineDeploymentTags": {
-      "defaultValue": {
-        "tag1": "value1",
-        "tag2": "value2",
-        "tag3": "value3"
-      },
-      "type": "Object"
+    "sweepJobDescription": {
+      "defaultValue": "A sweep job created by an ARM template",
+      "type": "String"
     },
-    "sku": {
-      "type": "Object"
-    },
-    "codeAssetName": {
-      "type": "string"
-    },
-    "codeAssetVersion": {
+    "displayName": {
       "type": "string",
-      "defaultValue": "1"
+      "defaultValue": "testSweepJobDisplayName"
     },
-    "scoringScript": {
-      "type": "string",
-      "defaultValue": "score.py",
+    "experimentName": {
+      "type": "String",
+      "defaultValue": "testExperimentName",
       "metadata": {
-        "description": "The script to execute on startup. eg. 'score.py'"
+        "description": "The name of the experiment the job belongs to. If not set, the job is placed in the 'Default' experiment."
       }
     },
-    "environmentAssetName": {
-      "type": "string"
+    "identity": {
+      "type": "String",
+      "allowedValues": [
+        "AmlToken",
+        "ManagedIdentity"
+      ],
+      "defaultValue": "AmlToken"
     },
-    "environmentAssetVersion": {
-      "type": "string",
-      "defaultValue": "1"
+    "command": {
+      "defaultValue": "python train.py",
+      "type": "String",
+      "metadata": {
+        "description": "The command to execute on startup of the job. eg. 'python train.py'"
+      }
+    },
+    "codeAssetName": {
+      "type": "String"
+    },
+    "codeAssetVersion": {
+      "defaultValue": "1",
+      "type": "String"
+    },
+    "computeName": {
+      "type": "String"
+    },
+    "computeInstanceCount": {
+      "defaultValue": 1,
+      "type": "Int"
+    },
+    "environmentName": {
+      "type": "String"
+    },
+    "environmentVersion": {
+      "defaultValue": "1",
+      "type": "String"
     },
     "environmentVariables": {
       "type": "object",
-      "defaultValue": {}
+      "defaultValue": {},
+      "metadata": {
+        "description": "Environment variables included in the job."
+      }
     },
-    "appInsightsEnabled": {
-      "type": "bool",
-      "defaultValue": false
+    "processCountPerInstance": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "Number of processes per node."
+      }
     },
-    "endpointComputeType": {
+    "workerCount": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "Number of workers. If not specified, will default to the instance count."
+      }
+    },
+    "parameterServerCount": {
+      "type": "int",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Number of parameter server tasks."
+      }
+    },
+    "samplingAlgorithm": {
       "type": "string",
       "allowedValues": [
-        "Managed",
-        "Kubernetes",
-        "AzureMLCompute"
-      ]
-    },
-    "instanceType": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "Compute instance type."
-      }
-    },
-    "livenessProbeFailureThreshold": {
-      "type": "int",
-      "defaultValue": 30,
-      "metadata": {
-        "description": "The number of failures to allow before returning an unhealthy status."
-      }
-    },
-    "livenessProbeSuccessThreshold": {
-      "type": "int",
-      "defaultValue": 1,
-      "metadata": {
-        "description": "The number of successful probes before returning a healthy status."
-      }
-    },
-    "livenessProbeInitialDelay": {
-      "type": "string",
-      "defaultValue": "PT0S",
-      "metadata": {
-        "description": "The delay before the first probe in ISO 8601 format."
-      }
-    },
-    "livenessProbePeriod": {
-      "type": "string",
-      "defaultValue": "PT10S",
-      "metadata": {
-        "description": "The length of time between probes in ISO 8601 format."
-      }
-    },
-    "livenessProbeTimeout": {
-      "type": "string",
-      "defaultValue": "PT2S",
-      "metadata": {
-        "description": "The probe timeout in ISO 8601 format."
-      }
-    },
-    "modelAssetName": {
-      "type": "string"
-    },
-    "modelAssetVersion": {
-      "type": "string",
-      "defaultValue": "1"
-    },
-    "modelMountPath": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "The path to mount the model in custom container."
-      }
-    },
-    "readinessProbeFailureThreshold": {
-      "type": "int",
-      "defaultValue": 30,
-      "metadata": {
-        "description": "The number of failures to allow before returning an unhealthy status."
-      }
-    },
-    "readinessProbeSuccessThreshold": {
-      "type": "int",
-      "defaultValue": 1,
-      "metadata": {
-        "description": "The number of successful probes before returning a healthy status."
-      }
-    },
-    "readinessProbeInitialDelay": {
-      "type": "string",
-      "defaultValue": "PT0S",
-      "metadata": {
-        "description": "The delay before the first probe in ISO 8601 format."
-      }
-    },
-    "readinessProbePeriod": {
-      "type": "string",
-      "defaultValue": "PT10S",
-      "metadata": {
-        "description": "The length of time between probes in ISO 8601 format."
-      }
-    },
-    "readinessProbeTimeout": {
-      "type": "string",
-      "defaultValue": "PT2S",
-      "metadata": {
-        "description": "The probe timeout in ISO 8601 format."
-      }
-    },
-    "requestSettingsMaxConcurrentRequestsPerInstance": {
-      "type": "int",
-      "defaultValue": 1,
-      "metadata": {
-        "description": "The number of maximum concurrent requests per node allowed per deployment. Defaults to 1."
-      }
-    },
-    "requestSettingsMaxQueueWait": {
-      "type": "string",
-      "defaultValue": "PT0.5S",
-      "metadata": {
-        "description": "The maximum amount of time a request will stay in the queue in ISO 8601 format. Defaults to 500ms."
-      }
-    },
-    "requestSettingsTimeout": {
-      "type": "string",
-      "defaultValue": "PT5S",
-      "metadata": {
-        "description": "The scoring timeout in ISO 8601 format. Defaults to 5000ms"
-      }
-    },
-    "scaleSettingsScaleType": {
-      "type": "string",
-      "allowedValues": [
-        "Default",
-        "TargetUtilization"
+        "Grid",
+        "Random",
+        "Bayesian"
       ],
-      "defaultValue": "Default"
+      "metadata": {
+        "description": "Type of the hyperparameter sampling algorithms."
+      }
+    },
+    "searchSpace": {
+      "type": "Object",
+      "metadata": {
+        "description": "A dictionary containing each parameter and its distribution. The dictionary key is the name of the parameter. For example, some parameters include the learning rate, convolution size, and dropout rate."
+      }
+    },
+    "earlyTerminationPolicyType": {
+      "type": "String",
+      "allowedValues": [
+        "Bandit",
+        "MedianStopping",
+        "TruncationSelection"
+      ],
+      "metadata": {
+        "description": "Name of policy configuration. Early termination policies enable canceling poor-performing runs before they complete."
+      }
+    },
+    "evaluationInterval": {
+      "type": "int",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Interval (number of runs) between policy evaluations."
+      }
+    },
+    "delayEvaluation": {
+      "type": "int",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Number of intervals by which to delay the first evaluation."
+      }
+    },
+    "slackFactor": {
+      "type": "float",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Ratio of the allowed distance from the best performing run."
+      }
+    },
+    "slackAmount": {
+      "type": "float",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Absolute distance allowed from the best performing run."
+      }
+    },
+    "truncationPercentage": {
+      "type": "int",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "The percentage of runs to cancel at each evaluation interval."
+      }
+    },
+    "datasetAssetName": {
+      "defaultValue": "",
+      "type": "String"
+    },
+    "datasetAssetVersion": {
+      "defaultValue": "1",
+      "type": "String"
+    },
+    "inputs": {
+      "defaultValue": {
+        "datasetBinding": {
+          "jobInputType": "Dataset",
+          "datasetId": "[variables('datasetAssetResourceId')]",
+          "mode": "ReadOnlyMount"
+        },
+        "literalBinding": {
+          "jobInputType": "Literal",
+          "value": "1"
+        },
+        "azureBlobBinding": {
+          "jobInputType": "Uri",
+          "uri": {
+            "file": "https://azuremlexamples.blob.core.windows.net/datasets/iris.csv%"
+          },
+          "mode": "ReadOnlyMount"
+        }
+      },
+      "type": "Object",
+      "metadata": {
+        "description": "Mapping of input data bindings used in the job. The default is an example job input object."
+      }
+    },
+    "outputs": {
+      "defaultValue": {
+        "datasetOutput": {
+          "jobOutputType": "Dataset",
+          "mode": "ReadWriteMount"
+        },
+        "azureBlobOutput": {
+          "jobOutputType": "Uri"
+        }
+      },
+      "type": "Object",
+      "metadata": {
+        "description": "Mapping of output data bindings used in the job. The default is an example job output object."
+      }
+    },
+    "distributionConfigurationType": {
+      "allowedValues": [
+        "Mpi",
+        "Tensorflow",
+        "PyTorch"
+      ],
+      "type": "String",
+      "metadata": {
+        "description": "Enum to determine the job distribution type."
+      }
+    },
+    "resourceConfiguration": {
+      "defaultValue": {
+        "instanceCount": {
+          "type": "int",
+          "defaultValue": 1,
+          "metadata": {
+            "description": "Optional number of instances or nodes used by the compute target."
+          }
+        },
+        "instanceType": {
+          "type": "string",
+          "defaultValue": "",
+          "metadata": {
+            "description": "Optional type of VM used as supported by the compute target."
+          }
+        },
+        "properties": {
+          "type": "object",
+          "defaultValue": {},
+          "metadata": {
+            "description": "Additional properties bag."
+          }
+        }
+      },
+      "type": "Object",
+      "metadata": {
+        "description": "Optional compute resource configuration."
+      }
+    },
+    "maxTotalTrials": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "Sweep Job max total trials."
+      }
+    },
+    "maxConcurrentTrials": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "Sweep Job max concurrent trials."
+      }
+    },
+    "timeout": {
+      "type": "string",
+      "defaultValue": "PT10M",
+      "metadata": {
+        "description": "Timeout for each trial in seconds."
+      }
+    },
+    "primaryMetric": {
+      "type": "String",
+      "metadata": {
+        "description": "Name of the metric to optimize."
+      }
+    },
+    "goal": {
+      "type": "String",
+      "allowedValues": [
+        "Maximize",
+        "Minimize"
+      ],
+      "metadata": {
+        "description": "Defines supported metric goals for hyperparameter tuning."
+      }
     }
   },
   "variables": {
-    "modelAssetResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/models/versions', parameters('workspaceName'), parameters('modelAssetName'), parameters('modelAssetVersion'))]",
-    "codeAssetResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/codes/versions', parameters('workspaceName'), parameters('codeAssetName'), parameters('codeAssetVersion'))]",
-    "environmentAssetResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentAssetName'), parameters('environmentAssetVersion'))]"
+    "codeVersionResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/codes/versions', parameters('workspaceName'), parameters('codeAssetName'), parameters('codeAssetVersion'))]",
+    "environmentResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentName'), parameters('environmentVersion'))]",
+    "computeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('computeName'))]",
+    "datasetAssetResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/datasets', parameters('datasetAssetName'), parameters('datasetAssetVersion'))]",
+    "earlyTerminationPolicy": {
+      "Bandit": {
+        "policyType": "Bandit",
+        "evaluationInterval": "[parameters('evaluationInterval')]",
+        "delayEvaluation": "[parameters('delayEvaluation')]",
+        "slackFactor": "[parameters('slackFactor')]",
+        "slackAmount": "[parameters('slackAmount')]"
+      },
+      "MedianStopping": {
+        "policyType": "MedianStopping",
+        "evaluationInterval": "[parameters('evaluationInterval')]",
+        "delayEvaluation": "[parameters('delayEvaluation')]"
+      },
+      "TruncationSelection": {
+        "policyType": "TruncationSelection",
+        "evaluationInterval": "[parameters('evaluationInterval')]",
+        "delayEvaluation": "[parameters('delayEvaluation')]",
+        "truncationPercentage": "[parameters('delayEvaluation')]"
+      }
+    },
+    "distributionType": {
+      "Mpi": {
+        "distributionType": "Mpi",
+        "processCountPerInstance": "[parameters('processCountPerInstance')]"
+      },
+      "Tensorflow": {
+        "distributionType": "Tensorflow",
+        "workerCount": "[parameters('workerCount')]",
+        "parameterServerCount": "[parameters('parameterServerCount')]"
+      },
+      "PyTorch": {
+        "distributionType": "Mpi",
+        "processCountPerInstance": "[parameters('processCountPerInstance')]"
+      }
+    }
   },
   "resources": [
     {
-      "type": "Microsoft.MachineLearningServices/workspaces/onlineEndpoints/deployments",
+      "type": "Microsoft.MachineLearningServices/workspaces/jobs",
       "apiVersion": "2021-10-01",
-      "name": "[concat(parameters('workspaceName'), '/', parameters('onlineEndpointName'),'/', parameters('onlineDeploymentName'))]",
-      "location": "[resourceGroup().location]",
-      "tags": "[parameters('onlineDeploymentTags')]",
-      "sku": "[parameters('sku')]",
+      "name": "[concat(parameters('workspaceName'), '/', parameters('sweepjobName'))]",
       "properties": {
-        "description": "[parameters('onlineEndpointDescription')]",
-        "codeConfiguration": {
-          "codeId": "[variables('codeAssetResourceId')]",
-          "scoringScript": "[parameters('scoringScript')]"
+        "jobType": "Sweep",
+        "description": "[parameters('sweepJobDescription')]",
+        "displayName": "[parameters('displayName')]",
+        "experimentName": "[parameters('experimentName')]",
+        "identity": "[parameters('identity')]",
+        "samplingAlgorithm": "[parameters('samplingAlgorithm')]",
+        "searchSpace": "[parameters('searchSpace')]",
+        "trial": {
+          "codeId": "[variables('codeVersionResourceId')]",
+          "command": "[parameters('command')]",
+          "environmentId": "[variables('environmentResourceId')]",
+          "environmentVariables": "[parameters('environmentVariables')]",
+          "computeId": "[variables('computeResourceId')]",
+          "distribution": "[variables('distributionType')[parameters('distributionConfigurationType')]]",
+          "resources": "[parameters('resourceConfiguration')]"
         },
-        "environmentId": "[variables('environmentAssetResourceId')]",
-        "environmentVariables": "[parameters('environmentVariables')]",
-        "appInsightsEnabled": "[parameters('appInsightsEnabled')]",
-        "endpointComputeType": "[parameters('endpointComputeType')]",
-        "instanceType": "[parameters('instanceType')]",
-        "livenessProbe": {
-          "failureThreshold": "[parameters('livenessProbeFailureThreshold')]",
-          "initialDelay": "[parameters('livenessProbeInitialDelay')]",
-          "period": "[parameters('livenessProbePeriod')]",
-          "successThreshold": "[parameters('livenessProbeSuccessThreshold')]",
-          "timeout": "[parameters('livenessProbeTimeout')]"
+        "earlyTermination": "[variables('earlyTerminationPolicy')[parameters('earlyTerminationPolicyType')]]",
+        "inputs": "[parameters('inputs')]",
+        "outputs": "[parameters('outputs')]",
+        "limits": {
+          "maxTotalTrials": "[parameters('maxTotalTrials')]",
+          "maxConcurrentTrials": "[parameters('maxConcurrentTrials')]",
+          "timeout": "[parameters('timeout')]"
         },
-        "model": "[variables('modelAssetResourceId')]",
-        "modelMountPath": "[parameters('modelMountPath')]",
-        "readinessProbe": {
-          "failureThreshold": "[parameters('readinessProbeFailureThreshold')]",
-          "initialDelay": "[parameters('readinessProbeInitialDelay')]",
-          "period": "[parameters('readinessProbePeriod')]",
-          "successThreshold": "[parameters('readinessProbeSuccessThreshold')]",
-          "timeout": "[parameters('readinessProbeTimeout')]"
+        "objective": {
+          "primaryMetric": "[parameters('primaryMetric')]",
+          "goal": "[parameters('goal')]"
         },
-        "requestSettings": {
-          "maxConcurrentRequestsPerInstance": "[parameters('requestSettingsMaxConcurrentRequestsPerInstance')]",
-          "maxQueueWait": "[parameters('requestSettingsMaxQueueWait')]",
-          "requestTimeout": "[parameters('requestSettingsTimeout')]"
-        },
-        "scaleSettings": {
-          "scaleType": "[parameters('scaleSettingsScaleType')]"
-        },
-        "properties": {}
+        "properties": {},
+        "tags": {}
       }
     }
   ]
