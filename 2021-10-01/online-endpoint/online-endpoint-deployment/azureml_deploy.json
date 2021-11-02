@@ -33,8 +33,9 @@
       },
       "type": "Object"
     },
-    "sku": {
-      "type": "Object"
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
     },
     "codeAssetName": {
       "type": "string"
@@ -248,9 +249,8 @@
       "type": "Microsoft.MachineLearningServices/workspaces/onlineEndpoints/deployments",
       "apiVersion": "2021-10-01",
       "name": "[concat(parameters('workspaceName'), '/', parameters('onlineEndpointName'),'/', parameters('onlineDeploymentName'))]",
-      "location": "[resourceGroup().location]",
-      "tags": "[parameters('onlineDeploymentTags')]",
-      "sku": "[parameters('sku')]",
+      "location": "[parameters('onlineDeploymentTags')]",
+      "tags": "[parameters('location')]",
       "properties": {
         "description": "[parameters('onlineEndpointDescription')]",
         "codeConfiguration": {
