@@ -35,8 +35,10 @@
     },
     "isAnonymous": {
       "defaultValue": false,
-      "type": "Bool"
-    }
+      "type": "Bool",
+      "metadata": {
+        "description": "If the name version are system generated (anonymous registration)."
+      }
   },
   "resources": [
     {
