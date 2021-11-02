@@ -9,7 +9,6 @@
       }
     },
     "onlineEndpointName": {
-      "defaultValue": "testOnlineEndpointGA",
       "type": "String",
       "metadata": {
         "description": "Specifies the name of the Azure Machine Learning online endpoint which will be deployed."
@@ -60,7 +59,11 @@
     },
     "environmentVariables": {
       "type": "object",
-      "defaultValue": {}
+      "defaultValue": {
+        "var1": "value1",
+        "var2": "value2",
+        "var3": "value3"
+      }
     },
     "appInsightsEnabled": {
       "type": "bool",
@@ -193,12 +196,52 @@
         "TargetUtilization"
       ],
       "defaultValue": "Default"
+    },
+    "targetUtilizationPollingInterval": {
+      "type": "string",
+      "defaultValue": "PT1S",
+      "metadata": {
+        "description": "The polling interval in ISO 8691 format. Only supports duration with precision as low as seconds."
+      }
+    },
+    "targetUtilizationPercentage": {
+      "type": "int",
+      "defaultValue": 70,
+      "metadata": {
+        "description": "Target CPU usage for the autoscaler."
+      }
+    },
+    "targetUtilizationPercentageMinInstances": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "The minimum number of instances to always be present."
+      }
+    },
+    "targetUtilizationPercentageMaxInstances": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "The maximum number of instances that the deployment can scale to. The quota will be reserved for max instances."
+      }
     }
   },
   "variables": {
     "modelAssetResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/models/versions', parameters('workspaceName'), parameters('modelAssetName'), parameters('modelAssetVersion'))]",
     "codeAssetResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/codes/versions', parameters('workspaceName'), parameters('codeAssetName'), parameters('codeAssetVersion'))]",
-    "environmentAssetResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentAssetName'), parameters('environmentAssetVersion'))]"
+    "environmentAssetResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentAssetName'), parameters('environmentAssetVersion'))]",
+    "scaleSettings": {
+      "Default": {
+        "scaleType": "Default"
+      },
+      "TargetUtilization": {
+        "scaleType": "[parameters('scaleSettingsScaleType')]",
+        "pollingInterval": "[parameters('targetUtilizationPollingInterval')]",
+        "targetUtilizationPercentage": "[parameters('targetUtilizationPercentage')]",
+        "minInstances": "[parameters('targetUtilizationPercentageMinInstances')]",
+        "maxInstances": "[parameters('targetUtilizationPercentageMaxInstances')]"
+      }
+    }
   },
   "resources": [
     {
@@ -240,9 +283,7 @@
           "maxQueueWait": "[parameters('requestSettingsMaxQueueWait')]",
           "requestTimeout": "[parameters('requestSettingsTimeout')]"
         },
-        "scaleSettings": {
-          "scaleType": "[parameters('scaleSettingsScaleType')]"
-        },
+        "scaleSettings": "[variables('scaleSettings')[parameters('scaleSettingsScaleType')]]",
         "properties": {}
       }
     }
