@@ -1,0 +1,61 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspaceName": {
+      "type": "String",
+      "metadata": {
+        "description": "Specifies the name of the Azure Machine Learning Workspace which will contain this code asset."
+      }
+    },
+    "datasetAssetName": {
+      "defaultValue": "testDataAssetGA",
+      "type": "String"
+    },
+    "datasetAssetVersion": {
+      "defaultValue": "1",
+      "type": "String"
+    },
+    "datasetAssetDescription": {
+      "defaultValue": "This is a test description for a data asset created from an ARM template",
+      "type": "String"
+    },
+    "isAnonymous": {
+      "defaultValue": false,
+      "type": "Bool",
+      "metadata": {
+        "description": "If the name version are system generated (anonymous registration)."
+      }
+    },
+    "datasetPath": {
+      "type": "String",
+      "metadata": {
+        "description": "The path of the file in the datastore or https/wasb/adlsgen storage url."
+      }
+    },
+    "datasetFolderPath": {
+      "type": "String",
+      "metadata": {
+        "description": "The path of the file/directory in the datastore or https/wasb/adlsgen storage url."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.MachineLearningServices/workspaces/datasets/versions",
+      "apiVersion": "2021-10-01",
+      "name": "[concat(parameters('workspaceName'), '/', parameters('datasetAssetName'), '/', parameters('datasetAssetVersion'))]",
+      "properties": {
+        "description": "[parameters('datasetAssetDescription')]",
+        "isAnonymous": "[parameters('isAnonymous')]",
+        "paths": [
+          {
+            "file": "[parameters('datasetPath')]"
+          }
+        ],
+        "properties": {},
+        "tags": {}
+      }
+    }
+  ]
+}
