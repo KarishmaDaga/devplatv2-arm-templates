@@ -31,7 +31,7 @@
       "type": "String",
       "allowedValues": [
         "AmlToken",
-        "ManagedIdentity",
+        "ManagedIdentity"
       ],
       "defaultValue": "AmlToken"
     },
@@ -205,7 +205,7 @@
       "allowedValues": [
         "Mpi",
         "Tensorflow",
-        "PyTorch",
+        "PyTorch"
       ],
       "type": "String",
       "metadata": {
@@ -317,7 +317,7 @@
       "PyTorch": {
         "distributionType": "Mpi",
         "processCountPerInstance": "[parameters('processCountPerInstance')]"
-      },
+      }
     }
   },
   "resources": [
