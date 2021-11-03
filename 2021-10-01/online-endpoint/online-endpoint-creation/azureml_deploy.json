@@ -5,6 +5,21 @@
     "workspaceName": {
       "type": "String"
     },
+    "location": {
+      "type": "String"
+    },
+    "identityType": {
+      "allowedValues": [
+        "SystemAssigned",
+        "UserAssigned",
+        "SystemAssignedUserAssigned",
+        "None"
+      ],
+      "type": "String",
+      "metadata": {
+        "description": "The MSI Identity that is associated with this resource."
+      }
+    },
     "allowPublicAccess": {
       "defaultValue": true,
       "type": "Bool",
@@ -13,7 +28,7 @@
       }
     },
     "authMode": {
-      "defaultValue": "AMLToken",
+      "defaultValue": "Key",
       "allowedValues": [
         "AMLToken",
         "Key",
@@ -52,7 +67,6 @@
     }
   },
   "variables": {
-    "location": "[resourceGroup().location]",
     "computeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('computeName'))]"
   },
   "resources": [
@@ -60,12 +74,15 @@
       "type": "Microsoft.MachineLearningServices/workspaces/onlineEndpoints",
       "apiVersion": "2021-10-01",
       "name": "[concat(parameters('workspaceName'), '/', parameters('onlineEndpointName'))]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "tags": "[parameters('onlineEndpointTags')]",
+      "identity": {
+        "type": "[parameters('identityType')]"
+      },
       "properties": {
         "allowPublicAccess": "[parameters('allowPublicAccess')]",
         "authMode": "[parameters('authMode')]",
-        "compute": "[variables('computeResourceId')]",
+        "compute": "[if(not(equals(parameters('computeName'), '')), variables('computeResourceId'), json('null'))]",
         "description": "[parameters('onlineEndpointDescription')]",
         "traffic": "[parameters('traffic')]",
         "properties": {}
