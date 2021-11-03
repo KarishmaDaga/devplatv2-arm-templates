@@ -225,7 +225,7 @@
         "description": "The maximum number of instances that the deployment can scale to. The quota will be reserved for max instances."
       }
     },
-	"skuName": {
+    "skuName": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
@@ -264,6 +264,10 @@
       "name": "[concat(parameters('workspaceName'), '/', parameters('onlineEndpointName'),'/', parameters('onlineDeploymentName'))]",
       "location": "[parameters('location')]",
       "tags": "[parameters('onlineDeploymentTags')]",
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "capacity": "[parameters('skuCapacity')]"
+      },
       "properties": {
         "description": "[parameters('onlineEndpointDescription')]",
         "codeConfiguration": {
@@ -297,10 +301,6 @@
           "requestTimeout": "[parameters('requestSettingsTimeout')]"
         },
         "scaleSettings": "[variables('scaleSettings')[parameters('scaleSettingsScaleType')]]",
-        "sku": {
-          "name": "[parameters('skuName')]",
-          "capacity": "[parameters('skuCapacity')]"
-        },
         "properties": {}
       }
     }
