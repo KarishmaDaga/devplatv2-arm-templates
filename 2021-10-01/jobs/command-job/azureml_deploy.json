@@ -22,7 +22,7 @@
     "displayName": {
       "type": "String",
       "metadata": {
-        "description": "The display name of the job belongs to."
+        "description": "The display name the job belongs to."
       }
     },
     "commandJobDescription": {
@@ -49,7 +49,17 @@
     },
     "computeInstanceCount": {
       "defaultValue": 1,
-      "type": "Int"
+      "type": "Int",
+      "metadata": {
+        "description": "Optional number of instances or nodes used by the compute target."
+      }
+    },
+    "computeInstanceType": {
+      "defaultValue": "",
+      "type": "String",
+      "metadata": {
+        "description": "Optional type of VM used as supported by the compute target."
+      }
     },
     "environmentName": {
       "defaultValue": "",
@@ -71,19 +81,12 @@
       "defaultValue": {
         "datasetBinding": {
           "jobInputType": "Dataset",
-          "datasetId": "[variables('datasetAssetResourceId')]",
+          "datasetId": "[resourceId('Microsoft.MachineLearningServices/workspaces/datasets/versions', parameters('workspaceName'),parameters('datasetAssetName'), parameters('datasetAssetVersion'))]",
           "mode": "ReadOnlyMount"
         },
         "literalBinding": {
           "jobInputType": "Literal",
           "value": "1"
-        },
-        "azureBlobBinding": {
-          "jobInputType": "Uri",
-          "uri": {
-            "file": "https://azuremlexamples.blob.core.windows.net/datasets/iris.csv%"
-          },
-          "mode": "ReadOnlyMount"
         }
       },
       "type": "Object",
@@ -117,33 +120,25 @@
         "description": "Enum to determine the job distribution type."
       }
     },
-    "resourceConfiguration": {
-      "defaultValue": {
-        "instanceCount": {
-          "type": "int",
-          "defaultValue": 1,
-          "metadata": {
-            "description": "Optional number of instances or nodes used by the compute target."
-          }
-        },
-        "instanceType": {
-          "type": "string",
-          "defaultValue": "",
-          "metadata": {
-            "description": "Optional type of VM used as supported by the compute target."
-          }
-        },
-        "properties": {
-          "type": "object",
-          "defaultValue": {},
-          "metadata": {
-            "description": "Additional properties bag."
-          }
-        }
-      },
-      "type": "Object",
+    "processCountPerInstance": {
+      "defaultValue": 1,
+      "type": "Int",
       "metadata": {
-        "description": "Optional compute resource configuration."
+        "description": "Number of processes per node."
+      }
+    },
+    "tensorflowWorkerCount": {
+      "defaultValue": 1,
+      "type": "Int",
+      "metadata": {
+        "description": "Number of workers. If not specified, will default to the instance count."
+      }
+    },
+    "tensorflowParameterServerCount": {
+      "defaultValue": 0,
+      "type": "Int",
+      "metadata": {
+        "description": "Number of parameter server tasks."
       }
     },
     "jobLimitTimeout": {
@@ -156,48 +151,21 @@
   },
   "variables": {
     "codeVersionResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/codes/versions', parameters('workspaceName'), parameters('codeAssetName'), parameters('codeAssetVersion'))]",
-    "environmentResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentName'), parameters('environmentVersion'))]",
     "computeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('computeName'))]",
-    "datasetAssetResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/datasets', parameters('datasetAssetName'), parameters('datasetAssetVersion'))]",
+    "environmentResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/environments/versions', parameters('workspaceName'), parameters('environmentName'), parameters('environmentVersion'))]",
     "distributionType": {
       "Mpi": {
-        "type": "Object",
-        "defaultValue": {
-          "distributionType": "Mpi",
-          "processCountPerInstance": {
-            "type": "int",
-            "defaultValue": 1,
-            "metadata": {
-              "description": "Number of processes per node."
-            }
-          }
-        }
+        "distributionType": "Mpi",
+        "processCountPerInstance": "[parameters('processCountPerInstance')]"
       },
       "Tensorflow": {
-        "type": "Object",
-        "defaultValue": {
-          "distributionType": "Tensorflow",
-          "workerCount": {
-            "type": "int",
-            "defaultValue": 1,
-            "metadata": {
-              "description": "Number of workers. If not specified, will default to the instance count."
-            }
-          }
-        }
+        "distributionType": "Tensorflow",
+        "workerCount": "[parameters('tensorflowWorkerCount')]",
+        "parameterServerCount": "[parameters('tensorflowParameterServerCount')]"
       },
       "PyTorch": {
-        "type": "Object",
-        "defaultValue": {
-          "distributionType": "Pytorch",
-          "processCountPerInstance": {
-            "type": "int",
-            "defaultValue": 1,
-            "metadata": {
-              "description": "Number of processes per node."
-            }
-          }
-        }
+        "distributionType": "Pytorch",
+        "processCountPerInstance": "[parameters('processCountPerInstance')]"
       }
     }
   },
@@ -212,13 +180,17 @@
         "experimentName": "[parameters('experimentName')]",
         "description": "[parameters('commandJobDescription')]",
         "codeId": "[variables('codeVersionResourceId')]",
-        "environmentId": "[if(equals(parameters('environmentName'),''), json('null'), variables('environmentResourceId'))]",
-        "inputs": "[parameters('inputs')",
-        "outputs": "[parameters('outputs')",
-        "command": "[parameters('command')]",
         "computeId": "[variables('computeResourceId')]",
+        "environmentId": "[if(equals(parameters('environmentName'),''), json('null'), variables('environmentResourceId'))]",
+        "inputs": "[parameters('inputs')]",
+        "outputs": "[parameters('outputs')]",
+        "command": "[parameters('command')]",
         "distribution": "[variables('distributionType')[parameters('distributionConfigurationType')]]",
-        "resources": "[parameters('resourceConfiguration')]",
+        "resources": {
+          "instanceCount": "[parameters('computeInstanceCount')]",
+          "instanceType": "[parameters('computeInstanceType')]",
+          "properties": {}
+        },
         "limits": {
           "jobLimitsType": "Command",
           "timeout": "[parameters('jobLimitTimeout')]"
