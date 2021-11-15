@@ -70,11 +70,7 @@ az storage blob upload-batch -d $AZUREML_DEFAULT_CONTAINER/score -s $local/file/
 curl --location --request PUT "https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.MachineLearningServices/workspaces/$WORKSPACE/codes/score-sklearn/versions/1?api-version=$API_VERSION" \
 --header "Authorization: Bearer $TOKEN" \
 --header "Content-Type: application/json" \
---data-binary "{
-  \"properties\": {
-    \"codeUri\": \"https://$AZURE_STORAGE_ACCOUNT.blob.core.windows.net/$AZUREML_DEFAULT_CONTAINER/score\"
-  }
-}"
+--data-binary @/full/path/to/code/armtemplate.json
 # </create_code>
 
 # <upload_model>
