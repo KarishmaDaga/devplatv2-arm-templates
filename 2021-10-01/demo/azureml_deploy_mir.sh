@@ -1,3 +1,4 @@
+# tells bash to print out the statements as they are being executed
 set -x
 
 # <create_variables>
