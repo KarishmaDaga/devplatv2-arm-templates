@@ -153,7 +153,7 @@
       "defaultValue": {
         "pipelineSampleInputData": {
           "jobInputType": "Dataset",
-          "datasetId": "[variables('pipelineSampleInputsDatasetId')",
+          "datasetId": "[variables('pipelineSampleInputsDatasetId')]",
           "mode": "ReadOnlyMount"
         }
       },
@@ -209,17 +209,17 @@
     },
     "componentJob1": {
       "computeId": "[variables('componentJob1ComputeResourceId')]",
-      "componentId": "[parameters('componentJob1ComponentId')",
-      "inputs": "[parameters('componentJob1Inputs')",
-      "outputs": "[parameters('componentJob1Outputs')",
-      "overrides": "[parameters('componentJob1Overrides')"
+      "componentId": "[parameters('componentJob1ComponentId')]",
+      "inputs": "[parameters('componentJob1Inputs')]",
+      "outputs": "[parameters('componentJob1Outputs')]",
+      "overrides": "[parameters('componentJob1Overrides')]"
     },
     "componentJob2": {
       "computeId": "[variables('componentJob2ComputeResourceId')]",
-      "componentId": "[parameters('componentJob2ComponentId')",
-      "inputs": "[parameters('componentJob2Inputs')",
-      "outputs": "[parameters('componentJob2Outputs')",
-      "overrides": "[parameters('componentJob2Overrides')"
+      "componentId": "[parameters('componentJob2ComponentId')]",
+      "inputs": "[parameters('componentJob2Inputs')]",
+      "outputs": "[parameters('componentJob2Outputs')]",
+      "overrides": "[parameters('componentJob2Overrides')]"
     }
   },
   "resources": [
@@ -234,8 +234,8 @@
         "experimentName": "[parameters('experimentName')]",
         "description": "[parameters('pipelineJobDescription')]",
         "settings": {
-          "continueRunOnStepFailure": "[parameters('continueRunOnStepFailure')",
-          "defaultDatastoreName": "[parameters('defaultDatastoreName')"
+          "continueRunOnStepFailure": "[parameters('continueRunOnStepFailure')]",
+          "defaultDatastoreName": "[parameters('defaultDatastoreName')]"
         },
         "componentJobs": {
           "componentJob1": "[variables('componentJob1')]",
