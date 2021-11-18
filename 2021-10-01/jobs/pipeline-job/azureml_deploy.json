@@ -33,7 +33,7 @@
       "type": "bool",
       "defaultValue": false
     },
-    "defaultDatastoreName": {
+    "datastoreName": {
       "type": "string",
       "defaultValue": "workspaceblobstore"
     },
@@ -235,7 +235,7 @@
         "description": "[parameters('pipelineJobDescription')]",
         "settings": {
           "continueRunOnStepFailure": "[parameters('continueRunOnStepFailure')]",
-          "defaultDatastoreName": "[parameters('defaultDatastoreName')]"
+          "datastoreName": "[parameters('datastoreName')]"
         },
         "componentJobs": {
           "componentJob1": "[variables('componentJob1')]",
