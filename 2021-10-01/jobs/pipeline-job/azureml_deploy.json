@@ -192,11 +192,11 @@
   },
   "variables": {
     "componentJob1ComputeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('componentJob1ComputeName'))]",
-    "datasetAssetResourceId1": "[resourceId('Microsoft.MachineLearningServices/workspaces/datasets/versions', parameters('componentJob1DatasetAssetName'), parameters('componentJob1DatasetAssetVersion'))]",
+    "datasetAssetResourceId1": "[resourceId('Microsoft.MachineLearningServices/workspaces/datasets/versions', parameters('workspaceName'),parameters('componentJob1DatasetAssetName'), parameters('componentJob1DatasetAssetVersion'))]",
     "componentJob2ComputeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('componentJob2ComputeName'))]",
-    "datasetAssetResourceId2": "[resourceId('Microsoft.MachineLearningServices/workspaces/datasets/versions', parameters('componentJob2DatasetAssetName'), parameters('componentJob2DatasetAssetVersion'))]",
+    "datasetAssetResourceId2": "[resourceId('Microsoft.MachineLearningServices/workspaces/datasets/versions', parameters('workspaceName'),parameters('componentJob2DatasetAssetName'), parameters('componentJob2DatasetAssetVersion'))]",
     "pipelineComputeResourceId": "[resourceId('Microsoft.MachineLearningServices/workspaces/computes', parameters('workspaceName'), parameters('pipelineComputeName'))]",
-    "pipelineSampleInputsDatasetId": "[resourceId('Microsoft.MachineLearningServices/workspaces/datasets/versions', parameters('pipelineSampleInputsDatasetAssetName'), parameters('pipelineSampleInputsDatasetAssetVersion'))]",
+    "pipelineSampleInputsDatasetId": "[resourceId('Microsoft.MachineLearningServices/workspaces/datasets/versions', parameters('workspaceName'),parameters('pipelineSampleInputsDatasetAssetName'), parameters('pipelineSampleInputsDatasetAssetVersion'))]",
     "bindingForComponent1": {
       "bindingType": "Basic",
       "source": "[parameters('bindingSourceForComponent1')]",
